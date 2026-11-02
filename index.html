@@ -1,1 +1,100 @@
-<h1>hola mundo</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HUB 3DS·A · Repaso del año</title>
+  <meta name="description" content="Portal de repaso de 3.º Bachillerato en Desarrollo de Software «A»">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="barra">
+    <a class="logo" href="#inicio">HUB&nbsp;3DS·A</a>
+    <nav aria-label="Navegación principal">
+      <a href="#modulos">Módulos</a>
+      <a href="#nube">Tecnologías</a>
+      <a href="#linea">Línea de tiempo</a>
+      <a href="#flashcards">Flashcards</a>
+      <a href="#logros">Logros</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="inicio" class="portada">
+      <h1>Repasa el año,<br>módulo por módulo</h1>
+      <p>Qué hicimos, con qué programas y herramientas, y dónde seguir aprendiendo.</p>
+      <a class="boton" href="#modulos">Ver módulos</a>
+      <p class="contador" id="contador"></p>
+      <div class="progreso" aria-hidden="true"><i id="progresoBarra"></i></div>
+      <p class="contador" id="progresoTxt"></p>
+    </section>
+
+    <section id="modulos">
+      <h2>Módulos del año</h2>
+      <div class="buscador">
+        <label for="buscar" class="solo-lectores">Buscar módulos</label>
+        <input type="search" id="buscar" placeholder="Buscar módulo, programa o herramienta…" autocomplete="off">
+        <kbd title="Atajo de teclado">/</kbd>
+      </div>
+      <p class="filtro-activo" id="filtroActivo" aria-live="polite"></p>
+      <div class="rejilla" id="rejilla"></div>
+    </section>
+
+    <section id="nube">
+      <h2>Nube de tecnologías</h2>
+      <p class="suave">Haz clic en una tecnología para filtrar los módulos donde la usaste.</p>
+      <div class="nube" id="nubeTec"></div>
+    </section>
+
+    <section id="linea">
+      <h2>Línea de tiempo del año</h2>
+      <ol class="linea" id="lineaTiempo"></ol>
+    </section>
+
+    <section id="flashcards">
+      <h2>Flashcards de repaso</h2>
+      <p class="suave">Intenta responder antes de voltear la tarjeta. Clic, Enter o Espacio para voltear.</p>
+      <div class="mazo">
+        <button class="carta" id="carta" aria-live="polite">
+          <span class="interior">
+            <span class="cara frente" id="cartaFrente"></span>
+            <span class="cara dorso" id="cartaDorso"></span>
+          </span>
+        </button>
+        <div class="controles">
+          <button class="boton sec" id="prev">← Anterior</button>
+          <span id="cartaNum" class="suave"></span>
+          <button class="boton sec" id="next">Siguiente →</button>
+          <button class="boton sec" id="barajar">🔀 Barajar</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="logros">
+      <h2>Logros</h2>
+      <div class="insignias" id="insignias"></div>
+    </section>
+
+    <section id="equipo">
+      <h2>Equipo</h2>
+      <ul id="integrantes"></ul>
+    </section>
+  </main>
+
+  <dialog id="ficha" aria-labelledby="fichaTitulo">
+    <button class="cerrar" id="cerrar" aria-label="Cerrar ficha">×</button>
+    <div id="fichaContenido"></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <footer>Instituto Nacional Cantón Lourdes (INDEL) · 3.º DS «A»</footer>
+
+  <script src="data/modulos.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
