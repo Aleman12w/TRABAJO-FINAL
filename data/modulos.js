@@ -127,4 +127,32 @@ const MODULOS = [
     videos: [],   // ej: { titulo: "Mi tutorial", url: "https://www.youtube.com/watch?v=XXXXXXXXXXX" }
     quiz: []      // el quiz se llena el Día 2
   },
+  {
+    id: "python",                         // único, sin espacios ni tildes
+    nombre: "Programación con Python",
+    docente: "Javier Mi",            // o "Arcides Canales"
+    icono: "🐍",
+    periodo: "Febrero – Marzo",
+    resumen: "Escribí programas con variables, ciclos y funciones.",
+    aprendizajes: [
+      "Usar condicionales y ciclos",
+      "Crear funciones reutilizables",
+      "Leer errores del intérprete"
+    ],
+    instrumentos: ["Guía de ejercicios", "Rúbrica del proyecto"],
+    programas: ["Python 3", "Visual Studio Code"],
+    herramientas: ["Python", "Flet"],
+    recursos: [
+      { titulo: "Documentación de Python", url: "https://docs.python.org/es/3/" }
+    ],
+    evidencias: [
+      { titulo: "Mi proyecto en GitHub", url: "https://github.com/" }
+    ],
+    flashcards: [
+      { p: "¿Para qué sirve una función?", r: "Para agrupar código reutilizable bajo un nombre y llamarlo cuando se necesite." },
+      { p: "¿Qué diferencia hay entre for y while?", r: "for recorre una colección o rango; while repite mientras una condición sea verdadera." }
+    ],
+    videos: [],   // ej: { titulo: "Mi tutorial", url: "https://www.youtube.com/watch?v=XXXXXXXXXXX" }
+    quiz: []      // el quiz se llena el Día 2
+  }
 ];
