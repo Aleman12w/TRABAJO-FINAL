@@ -98,6 +98,29 @@ const MODULOS = [
     flashcards: [],   // vacío = tarjetas automáticas
     videos: [],
     quiz: []
+  },
+  {
+    id: "bd",
+    nombre: "Bases de datos",
+    docente: "Arcides Canales",
+    icono: "🗄️",
+    periodo: "Junio – Agosto",
+    resumen: "Diseñé tablas y consulté datos con SQL.",
+    aprendizajes: [
+      "Crear tablas y relaciones",
+      "Consultas SELECT, INSERT, UPDATE",
+      "Normalización básica"
+    ],
+    instrumentos: ["Guía de laboratorio", "Examen escrito"],
+    programas: ["MySQL", "SQL Server"],
+    herramientas: ["SQL", "Python"],
+    recursos: [
+      { titulo: "Documentación de MySQL", url: "https://dev.mysql.com/doc/" }
+    ],
+    evidencias: [],
+    flashcards: [],   // vacío = tarjetas automáticas
+    videos: [],
+    quiz: []
   }
   
 ];
