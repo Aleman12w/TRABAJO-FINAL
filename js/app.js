@@ -1,5 +1,5 @@
 /* Lee MODULOS y EQUIPO (data/modulos.js) y construye toda la página.
-   Si cambias los datos, la página cambia sola. */
+   Si cambias los datos, la página cambia sola.  Versión v0.5 (Día 2) */
 
 const $ = id => document.getElementById(id);
 
@@ -7,6 +7,7 @@ const $ = id => document.getElementById(id);
 function esc(t) {
   return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
+// Minúsculas y sin acentos: así "sesion" encuentra "sesión"
 function norm(s) {
   return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
@@ -26,6 +27,9 @@ function leer(k, def) {
 function guardar(k, v) {
   try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
 }
+function quitar(k) {
+  try { localStorage.removeItem(k); } catch (e) {}
+}
 
 /* ---------- Estado (se guarda en el navegador) ---------- */
 const LS = { rep: "hub3dsa:repasados", vis: "hub3dsa:vistos", vol: "hub3dsa:volteadas", log: "hub3dsa:logros" };
@@ -35,42 +39,108 @@ let vistos = leer(LS.vis, []).filter(id => idsValidos.includes(id));
 let volteadas = leer(LS.vol, 0);
 let desbloqueados = leer(LS.log, []);
 let busqueda = "";
-let etiqueta = null;
+let etiqueta = null;   // filtro de la nube de tecnologías
+let docente = null;    // filtro por docente
 
-/* ---------- Buscador + filtro de tecnologías ---------- */
+/* ---------- Anatomía de una ficha terminada (guía del Día 2) ---------- */
+const MINIMOS = [
+  { campo: "instrumentos", min: 2, etq: "Instrumentos" },
+  { campo: "programas",    min: 2, etq: "Programas" },
+  { campo: "herramientas", min: 2, etq: "Herramientas" },
+  { campo: "recursos",     min: 3, etq: "Recursos" },
+  { campo: "evidencias",   min: 1, etq: "Evidencias" },
+  { campo: "quiz",         min: 3, etq: "Preguntas de quiz" }
+];
+function completitud(m) {
+  const detalle = MINIMOS.map(r => {
+    const n = (m[r.campo] || []).length;
+    return { etq: r.etq, min: r.min, n, ok: n >= r.min };
+  });
+  return { ok: detalle.filter(d => d.ok).length, total: detalle.length, detalle };
+}
+
+/* ---------- Buscador + filtros (docente y tecnología) ---------- */
 function filtrados() {
   const q = norm(busqueda.trim());
   return MODULOS.filter(m => {
+    if (docente && m.docente !== docente) return false;
     if (etiqueta && !(m.herramientas || []).includes(etiqueta)) return false;
     if (!q) return true;
-    const texto = norm([m.nombre, m.resumen, m.docente, ...(m.herramientas || []), ...(m.programas || [])].join(" "));
+    const texto = norm([
+      m.nombre, m.resumen, m.docente,
+      ...(m.herramientas || []), ...(m.programas || []), ...(m.aprendizajes || [])
+    ].join(" "));
     return texto.includes(q);
   });
 }
 
+function hayFiltros() {
+  return Boolean(busqueda.trim() || etiqueta || docente);
+}
+
+function limpiarFiltros() {
+  busqueda = "";
+  etiqueta = null;
+  docente = null;
+  $("buscar").value = "";
+  pintarFiltrosDocente();
+  pintarNube();
+  pintarTarjetas();
+}
+
+function pintarFiltrosDocente() {
+  const nombres = [...new Set(MODULOS.map(m => m.docente).filter(Boolean))];
+  const chips = [{ v: null, t: "Todos" }, ...nombres.map(n => ({ v: n, t: n }))];
+  $("filtrosDoc").innerHTML = chips.map(c =>
+    `<button class="chip" data-doc="${c.v === null ? "" : esc(c.v)}" aria-pressed="${docente === c.v}">${esc(c.t)}</button>`
+  ).join("");
+}
+
 function pintarTarjetas() {
-  const lista_ = filtrados();
-  $("rejilla").innerHTML = lista_.length ? lista_.map(m => `
+  const visibles = filtrados();
+  $("rejilla").innerHTML = visibles.length ? visibles.map(m => {
+    const c = completitud(m);
+    const completa = c.ok === c.total;
+    return `
     <article class="tarjeta${repasados.includes(m.id) ? " repasada" : ""}">
       <span class="icono" aria-hidden="true">${esc(m.icono || "📘")}</span>
       <h3>${esc(m.nombre)}</h3>
       <p class="docente">${esc(m.docente)}</p>
       <p>${esc(m.resumen)}</p>
-      ${repasados.includes(m.id) ? '<span class="sello">✓ Repasado</span>' : ""}
+      <p class="insig">
+        ${repasados.includes(m.id) ? '<span class="sello">✓ Repasado</span>' : ""}
+        <span class="ficha-estado${completa ? " completa" : ""}" title="Mínimos de la anatomía de la ficha">
+          ${completa ? "✓ Ficha completa" : `Ficha ${c.ok}/${c.total}`}
+        </span>
+      </p>
       <button class="boton" data-id="${esc(m.id)}">Abrir ficha</button>
-    </article>
-  `).join("") : '<p class="suave">No hay módulos que coincidan con tu búsqueda.</p>';
+    </article>`;
+  }).join("") : `
+    <div class="vacio">
+      <p>😕 No encontramos módulos con esa búsqueda.</p>
+      <p class="suave">Prueba con otra palabra (por ejemplo una herramienta o un programa) o quita los filtros.</p>
+      <button class="boton" data-limpiar="1">Limpiar filtros</button>
+    </div>`;
+
+  $("conteo").textContent = `Mostrando ${visibles.length} de ${MODULOS.length} módulos`;
   $("contador").textContent = `${MODULOS.length} módulos en el mapa del año`;
   $("filtroActivo").innerHTML = etiqueta
-    ? `Filtrando por <b>${esc(etiqueta)}</b> · <button class="enlace" id="quitarFiltro">Quitar filtro</button>`
+    ? `Tecnología: <b>${esc(etiqueta)}</b> · <button class="enlace" id="quitarFiltro">Quitar</button>`
     : "";
   pintarProgreso();
 }
 
+/* ---------- Progreso del repaso ---------- */
 function pintarProgreso() {
   const total = MODULOS.length || 1;
-  $("progresoBarra").style.width = Math.round((repasados.length / total) * 100) + "%";
-  $("progresoTxt").textContent = `Repasados: ${repasados.length} de ${MODULOS.length}`;
+  const pct = Math.round((repasados.length / total) * 100);
+  $("progresoBarra").style.width = pct + "%";
+  $("progreso").setAttribute("aria-valuenow", String(pct));
+  $("progresoTxt").textContent = pct === 100
+    ? "🎉 ¡Repasaste todo el año! 100 %"
+    : `Repasados: ${repasados.length} de ${MODULOS.length} (${pct} %)`;
+  const completas = MODULOS.filter(m => { const c = completitud(m); return c.ok === c.total; }).length;
+  $("fichasTxt").textContent = `Fichas completas: ${completas} de ${MODULOS.length}`;
 }
 
 /* ---------- Nube de tecnologías ---------- */
@@ -173,11 +243,12 @@ function barajar() {
 
 /* ---------- Logros ---------- */
 const LOGROS = [
-  { id: "primero", ico: "🌱", t: "Primer paso",        d: "Marca 1 módulo como repasado",       ok: () => repasados.length >= 1 },
-  { id: "mitad",   ico: "🚀", t: "A mitad de camino",  d: "Repasa la mitad de los módulos",     ok: () => MODULOS.length > 0 && repasados.length >= Math.ceil(MODULOS.length / 2) },
-  { id: "todos",   ico: "🏆", t: "Año completo",       d: "Repasa todos los módulos",           ok: () => MODULOS.length > 0 && repasados.length >= MODULOS.length },
-  { id: "curioso", ico: "🔎", t: "Curioso",            d: "Abre 3 fichas distintas",            ok: () => vistos.length >= 3 },
-  { id: "cartas",  ico: "🃏", t: "Maestro de tarjetas", d: "Voltea 10 flashcards",              ok: () => volteadas >= 10 }
+  { id: "primero", ico: "🌱", t: "Primer paso",         d: "Marca 1 módulo como repasado",     ok: () => repasados.length >= 1 },
+  { id: "mitad",   ico: "🚀", t: "A mitad de camino",   d: "Repasa la mitad de los módulos",   ok: () => MODULOS.length > 0 && repasados.length >= Math.ceil(MODULOS.length / 2) },
+  { id: "todos",   ico: "🏆", t: "Año completo",        d: "Repasa todos los módulos",         ok: () => MODULOS.length > 0 && repasados.length >= MODULOS.length },
+  { id: "curioso", ico: "🔎", t: "Curioso",             d: "Abre 3 fichas distintas",          ok: () => vistos.length >= 3 },
+  { id: "cartas",  ico: "🃏", t: "Maestro de tarjetas", d: "Voltea 10 flashcards",             ok: () => volteadas >= 10 },
+  { id: "fichas",  ico: "✅", t: "Fichas impecables",   d: "Completa los mínimos de todas las fichas", ok: () => MODULOS.length > 0 && MODULOS.every(m => { const c = completitud(m); return c.ok === c.total; }) }
 ];
 
 let temporizadorToast;
@@ -212,7 +283,44 @@ function pintarLogros() {
   }).join("");
 }
 
-/* ---------- Ficha del módulo (con videos) ---------- */
+/* ---------- Celebración al llegar al 100 % ---------- */
+function confeti() {
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv = document.createElement("canvas");
+  cv.className = "confeti";
+  cv.setAttribute("aria-hidden", "true");
+  cv.width = window.innerWidth;
+  cv.height = window.innerHeight;
+  document.body.appendChild(cv);
+  const ctx = cv.getContext("2d");
+  const colores = ["#22d3ee", "#f046d2", "#ffb224", "#34f5a0"];
+  const piezas = Array.from({ length: 140 }, () => ({
+    x: Math.random() * cv.width, y: -20 - Math.random() * cv.height * 0.5,
+    vx: (Math.random() - 0.5) * 3, vy: 2 + Math.random() * 4,
+    s: 5 + Math.random() * 6, c: colores[Math.floor(Math.random() * colores.length)], r: Math.random() * 6
+  }));
+  const inicio = performance.now();
+  (function cuadro(t) {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    piezas.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.r += 0.1;
+      ctx.fillStyle = p.c;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+      ctx.restore();
+    });
+    if (t - inicio < 3500) requestAnimationFrame(cuadro); else cv.remove();
+  })(inicio);
+}
+
+function celebrar() {
+  confeti();
+  setTimeout(() => toast("🎉 ¡100 %! Repasaste todos los módulos del año"), 1800);
+}
+
+/* ---------- Ficha del módulo (con enlace directo y videos) ---------- */
 function videoHTML(v) {
   const m = String(v.url).match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);
   if (m) {
@@ -222,7 +330,16 @@ function videoHTML(v) {
   return `<p><a href="${esc(v.url)}" target="_blank" rel="noopener">▶ ${esc(v.titulo)}</a></p>`;
 }
 
-function abrirFicha(id) {
+function estadoFichaHTML(m) {
+  const c = completitud(m);
+  return `<details class="estado-ficha"${c.ok === c.total ? "" : " open"}>
+    <summary>Estado de la ficha: ${c.ok}/${c.total} mínimos cumplidos</summary>
+    <ul class="mins">${c.detalle.map(d =>
+      `<li class="${d.ok ? "ok" : "falta"}">${d.ok ? "✓" : "✗"} ${esc(d.etq)}: ${d.n} de ${d.min}</li>`).join("")}</ul>
+  </details>`;
+}
+
+function abrirFicha(id, sinHash) {
   const m = MODULOS.find(x => x.id === id);
   if (!m) return;
   if (!vistos.includes(id)) {
@@ -235,6 +352,7 @@ function abrirFicha(id) {
     <h2 id="fichaTitulo">${esc(m.icono || "")} ${esc(m.nombre)}</h2>
     <p class="docente">${esc(m.docente)}${m.periodo ? " · " + esc(m.periodo) : ""}</p>
     <p>${esc(m.resumen)}</p>
+    ${estadoFichaHTML(m)}
     <h3>Lo que aprendí</h3><ul>${lista(m.aprendizajes)}</ul>
     <h3>Instrumentos</h3><ul>${lista(m.instrumentos)}</ul>
     <h3>Programas</h3><ul>${lista(m.programas)}</ul>
@@ -243,19 +361,57 @@ function abrirFicha(id) {
     <h3>Evidencias</h3><ul>${enlaces(m.evidencias)}</ul>
     <h3>Tutoriales en video</h3>
     ${(m.videos && m.videos.length) ? m.videos.map(videoHTML).join("") : "<p class='suave'>Pendiente</p>"}
-    <p><button class="boton" id="marcar" data-id="${esc(id)}">${hecho ? "✓ Repasado (clic para desmarcar)" : "Marcar como repasado"}</button></p>
+    <p class="acciones">
+      <button class="boton" id="marcar" data-id="${esc(id)}">${hecho ? "✓ Repasado (clic para desmarcar)" : "Marcar como repasado"}</button>
+      <button class="boton sec" id="copiarEnlace">🔗 Copiar enlace</button>
+    </p>
   `;
-  $("ficha").showModal();
+  if (!sinHash) {
+    try { history.replaceState(null, "", "#modulo=" + id); } catch (e) {}
+  }
+  if (!$("ficha").open) $("ficha").showModal();
 }
 
 function alternarRepasado(id) {
   const i = repasados.indexOf(id);
-  if (i === -1) repasados.push(id); else repasados.splice(i, 1);
+  const agregado = i === -1;
+  if (agregado) repasados.push(id); else repasados.splice(i, 1);
   guardar(LS.rep, repasados);
   pintarTarjetas();
   evaluarLogros(true);
   const b = $("marcar");
   if (b) b.textContent = repasados.includes(id) ? "✓ Repasado (clic para desmarcar)" : "Marcar como repasado";
+  // Al llegar al 100 %: cerrar la ficha (el diálogo tapa el confeti) y celebrar
+  if (agregado && repasados.length === MODULOS.length) {
+    $("ficha").close();
+    celebrar();
+  }
+}
+
+function copiarEnlace() {
+  const url = location.href;
+  const ok = () => toast("🔗 Enlace copiado");
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(ok, () => toast("No se pudo copiar el enlace"));
+  } else {
+    toast("Copia el enlace desde la barra de direcciones");
+  }
+}
+
+// Si la URL trae #modulo=id, abre esa ficha directamente
+function abrirDesdeHash() {
+  const m = location.hash.match(/^#modulo=([\w-]+)/);
+  if (m && idsValidos.includes(m[1]) && !$("ficha").open) abrirFicha(m[1], true);
+}
+
+/* ---------- Reiniciar progreso ---------- */
+function reiniciar() {
+  if (!window.confirm("¿Borrar tu progreso (módulos repasados, logros y tarjetas volteadas)?")) return;
+  repasados = []; vistos = []; volteadas = 0; desbloqueados = [];
+  [LS.rep, LS.vis, LS.vol, LS.log].forEach(quitar);
+  pintarTarjetas();
+  pintarLogros();
+  toast("Progreso reiniciado");
 }
 
 /* ---------- Equipo ---------- */
@@ -265,8 +421,16 @@ function pintarEquipo() {
 
 /* ---------- Eventos ---------- */
 $("rejilla").addEventListener("click", e => {
+  if (e.target.closest("button[data-limpiar]")) { limpiarFiltros(); return; }
   const b = e.target.closest("button[data-id]");
   if (b) abrirFicha(b.dataset.id);
+});
+$("filtrosDoc").addEventListener("click", e => {
+  const b = e.target.closest("button[data-doc]");
+  if (!b) return;
+  docente = b.dataset.doc || null;
+  pintarFiltrosDocente();
+  pintarTarjetas();
 });
 $("filtroActivo").addEventListener("click", e => {
   if (e.target.id === "quitarFiltro") { etiqueta = null; pintarNube(); pintarTarjetas(); }
@@ -282,17 +446,25 @@ $("nubeTec").addEventListener("click", e => {
 $("fichaContenido").addEventListener("click", e => {
   const b = e.target.closest("#marcar");
   if (b) alternarRepasado(b.dataset.id);
+  if (e.target.closest("#copiarEnlace")) copiarEnlace();
 });
 $("cerrar").addEventListener("click", () => $("ficha").close());
 $("ficha").addEventListener("click", e => { if (e.target === $("ficha")) $("ficha").close(); });
+// Al cerrar la ficha (botón, clic fuera o Esc) se limpia #modulo=... de la URL
+$("ficha").addEventListener("close", () => {
+  if (/^#modulo=/.test(location.hash)) {
+    try { history.replaceState(null, "", location.pathname + location.search + "#modulos"); } catch (e) {}
+  }
+});
+window.addEventListener("hashchange", abrirDesdeHash);
 
 $("buscar").addEventListener("input", e => { busqueda = e.target.value; pintarTarjetas(); });
+$("reiniciar").addEventListener("click", reiniciar);
 
 // Atajo de teclado: "/" o Ctrl/Cmd+K enfocan el buscador; Escape lo limpia
 document.addEventListener("keydown", e => {
   const enCampo = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
-  const abierto = $("ficha").open;
-  if (abierto) return;
+  if ($("ficha").open) return;
   if ((e.key === "/" && !enCampo) || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k")) {
     e.preventDefault();
     $("modulos").scrollIntoView({ behavior: "smooth" });
@@ -311,13 +483,15 @@ $("next").addEventListener("click", () => mover(1));
 $("barajar").addEventListener("click", barajar);
 
 /* ---------- Arranque ---------- */
+pintarFiltrosDocente();
 pintarTarjetas();
 pintarNube();
 pintarLinea();
 mazo = construirMazo();
 pintarCarta();
-pintarLogros();
+evaluarLogros(false);
 pintarEquipo();
+abrirDesdeHash();
 
 /* ---------- PWA: registra el service worker ---------- */
 if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {

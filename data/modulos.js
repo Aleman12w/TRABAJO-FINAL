@@ -13,6 +13,14 @@
                  vacío, se generan tarjetas automáticas.
    - videos:     [{ titulo, url }] con enlaces de YouTube (se
                  incrustan) u otro sitio (se muestra el enlace).
+
+   DÍA 2 · Anatomía mínima de una ficha terminada (el portal
+   la mide solo y lo muestra como "Ficha 4/6" en cada tarjeta):
+     instrumentos ≥ 2 · programas ≥ 2 · herramientas ≥ 2
+     recursos ≥ 3 (con enlace verificado) · evidencias ≥ 1
+     quiz ≥ 3 preguntas (el quiz se programa en el Día 3)
+   Los módulos de abajo cumplen pocos mínimos A PROPÓSITO:
+   al llenarlos con contenido real, verás subir el contador.
    ===================================================== */
 
 const EQUIPO = [
@@ -98,85 +106,5 @@ const MODULOS = [
     flashcards: [],   // vacío = tarjetas automáticas
     videos: [],
     quiz: []
-  },
-  {
-    id: "bd",
-    nombre: "Bases de datos",
-    docente: "Arcides Canales",
-    icono: "🗄️",
-    periodo: "Junio – Agosto",
-    resumen: "Diseñé tablas y consulté datos con SQL.",
-    aprendizajes: [
-      "Crear tablas y relaciones",
-      "Consultas SELECT, INSERT, UPDATE",
-      "Normalización básica"
-    ],
-    instrumentos: ["Guía de laboratorio", "Examen escrito"],
-    programas: ["MySQL", "SQL Server"],
-    herramientas: ["SQL", "Python"],
-    recursos: [
-      { titulo: "Documentación de MySQL", url: "https://dev.mysql.com/doc/" }
-    ],
-    evidencias: [],
-    flashcards: [],   // vacío = tarjetas automáticas
-    videos: [],
-    quiz: []
-  },
-   {
-    id: "python",                         // único, sin espacios ni tildes
-    nombre: "Programación con Python",
-    docente: "Javier Mi",            // o "Arcides Canales"
-    icono: "🐍",
-    periodo: "Febrero – Marzo",
-    resumen: "Escribí programas con variables, ciclos y funciones.",
-    aprendizajes: [
-      "Usar condicionales y ciclos",
-      "Crear funciones reutilizables",
-      "Leer errores del intérprete"
-    ],
-    instrumentos: ["Guía de ejercicios", "Rúbrica del proyecto"],
-    programas: ["Python 3", "Visual Studio Code"],
-    herramientas: ["Python", "Flet"],
-    recursos: [
-      { titulo: "Documentación de Python", url: "https://docs.python.org/es/3/" }
-    ],
-    evidencias: [
-      { titulo: "Mi proyecto en GitHub", url: "https://github.com/" }
-    ],
-    flashcards: [
-      { p: "¿Para qué sirve una función?", r: "Para agrupar código reutilizable bajo un nombre y llamarlo cuando se necesite." },
-      { p: "¿Qué diferencia hay entre for y while?", r: "for recorre una colección o rango; while repite mientras una condición sea verdadera." }
-    ],
-    videos: [],   // ej: { titulo: "Mi tutorial", url: "https://www.youtube.com/watch?v=XXXXXXXXXXX" }
-    quiz: []      // el quiz se llena el Día 2
-  },
-  {
-    id: "python",                         // único, sin espacios ni tildes
-    nombre: "Programación con Python",
-    docente: "Javier Mi",            // o "Arcides Canales"
-    icono: "🐍",
-    periodo: "Febrero – Marzo",
-    resumen: "Escribí programas con variables, ciclos y funciones.",
-    aprendizajes: [
-      "Usar condicionales y ciclos",
-      "Crear funciones reutilizables",
-      "Leer errores del intérprete"
-    ],
-    instrumentos: ["Guía de ejercicios", "Rúbrica del proyecto"],
-    programas: ["Python 3", "Visual Studio Code"],
-    herramientas: ["Python", "Flet"],
-    recursos: [
-      { titulo: "Documentación de Python", url: "https://docs.python.org/es/3/" }
-    ],
-    evidencias: [
-      { titulo: "Mi proyecto en GitHub", url: "https://github.com/" }
-    ],
-    flashcards: [
-      { p: "¿Para qué sirve una función?", r: "Para agrupar código reutilizable bajo un nombre y llamarlo cuando se necesite." },
-      { p: "¿Qué diferencia hay entre for y while?", r: "for recorre una colección o rango; while repite mientras una condición sea verdadera." }
-    ],
-    videos: [],   // ej: { titulo: "Mi tutorial", url: "https://www.youtube.com/watch?v=XXXXXXXXXXX" }
-    quiz: []      // el quiz se llena el Día 2
   }
-  
 ];
