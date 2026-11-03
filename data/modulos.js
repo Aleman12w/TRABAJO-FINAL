@@ -102,7 +102,7 @@ const MODULOS = [
    {
     id: "python",                         // único, sin espacios ni tildes
     nombre: "Programación con Python",
-    docente: "Javier Mineros",            // o "Arcides Canales"
+    docente: "Javier Mi",            // o "Arcides Canales"
     icono: "🐍",
     periodo: "Febrero – Marzo",
     resumen: "Escribí programas con variables, ciclos y funciones.",
