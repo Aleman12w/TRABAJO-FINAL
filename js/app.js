@@ -1,5 +1,5 @@
 /* Lee MODULOS y EQUIPO (data/modulos.js) y construye toda la página.
-   Si cambias los datos, la página cambia sola.  Versión v0.5 (Día 2) */
+   Si cambias los datos, la página cambia sola.  Versión v0.6 (Día 2 + diseño nuevo) */
 
 const $ = id => document.getElementById(id);
 
@@ -12,6 +12,9 @@ function norm(s) {
   return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 function lista(items) {
+  return (items || []).map(i => `<li>${esc(i)}</li>`).join("");
+}
+function pildoras(items) {
   return (items || []).map(i => `<li>${esc(i)}</li>`).join("");
 }
 function enlaces(items) {
@@ -31,6 +34,26 @@ function quitar(k) {
   try { localStorage.removeItem(k); } catch (e) {}
 }
 
+/* ---------- Colores: cada módulo recibe uno de la paleta ---------- */
+const PALETA = ["#3B5BFF", "#FF5C7A", "#A7E22E", "#FFC932", "#12C2A9"];   // igual que --c1 ... --c5 del CSS
+const TINTA = "#12203F";
+
+// Texto blanco o azul tinta, según qué se lea mejor sobre ese color
+function textoSobre(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const luz = 0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255);
+  return luz > 125 ? TINTA : "#fff";
+}
+// Un módulo puede traer su propio color en modulos.js (color: "#RRGGBB")
+function colorDe(m) {
+  if (m && /^#[0-9a-f]{6}$/i.test(m.color || "")) return m.color;
+  const i = Math.max(0, MODULOS.indexOf(m));
+  return PALETA[i % PALETA.length];
+}
+function estiloColor(hex) {
+  return `--mc:${hex};--mc-tx:${textoSobre(hex)}`;
+}
+
 /* ---------- Estado (se guarda en el navegador) ---------- */
 const LS = { rep: "hub3dsa:repasados", vis: "hub3dsa:vistos", vol: "hub3dsa:volteadas", log: "hub3dsa:logros" };
 const idsValidos = MODULOS.map(m => m.id);
@@ -39,8 +62,9 @@ let vistos = leer(LS.vis, []).filter(id => idsValidos.includes(id));
 let volteadas = leer(LS.vol, 0);
 let desbloqueados = leer(LS.log, []);
 let busqueda = "";
-let etiqueta = null;   // filtro de la nube de tecnologías
-let docente = null;    // filtro por docente
+let etiqueta = null;        // filtro de la nube de tecnologías
+let docente = null;         // filtro por docente
+let pendienteSello = null;  // módulo cuyo sello debe "caer" cuando se cierre la ficha
 
 /* ---------- Anatomía de una ficha terminada (guía del Día 2) ---------- */
 const MINIMOS = [
@@ -58,6 +82,10 @@ function completitud(m) {
   });
   return { ok: detalle.filter(d => d.ok).length, total: detalle.length, detalle };
 }
+function medidorHTML(c) {
+  return `<span class="medidor" role="img" aria-label="Ficha: ${c.ok} de ${c.total} mínimos cumplidos">${
+    c.detalle.map(d => `<span class="${d.ok ? "on" : ""}"></span>`).join("")}</span>`;
+}
 
 /* ---------- Buscador + filtros (docente y tecnología) ---------- */
 function filtrados() {
@@ -72,10 +100,6 @@ function filtrados() {
     ].join(" "));
     return texto.includes(q);
   });
-}
-
-function hayFiltros() {
-  return Boolean(busqueda.trim() || etiqueta || docente);
 }
 
 function limpiarFiltros() {
@@ -96,49 +120,75 @@ function pintarFiltrosDocente() {
   ).join("");
 }
 
+/* ---------- Módulos: una carpeta por módulo ---------- */
+function carpetaHTML(m) {
+  const c = completitud(m);
+  const hecho = repasados.includes(m.id);
+  const herr = m.herramientas || [];
+  const chips = herr.slice(0, 4).map(h => `<li>${esc(h)}</li>`).join("") +
+    (herr.length > 4 ? `<li class="mas">+${herr.length - 4}</li>` : "");
+  // El sello solo se anima si la ficha ya está cerrada (si no, nadie lo vería)
+  const anima = m.id === pendienteSello && !$("ficha").open;
+  return `
+    <article class="carpeta" style="${estiloColor(colorDe(m))}">
+      <span class="pestana">${esc(m.docente)}</span>
+      <div class="cuerpo">
+        <div class="cab-mod">
+          <span class="ico" aria-hidden="true">${esc(m.icono || "📘")}</span>
+          <div>
+            <h3>${esc(m.nombre)}</h3>
+            ${m.periodo ? `<p class="periodo-txt">${esc(m.periodo)}</p>` : ""}
+          </div>
+        </div>
+        <p class="resumen">${esc(m.resumen)}</p>
+        <ul class="aprendi">${lista((m.aprendizajes || []).slice(0, 3))}</ul>
+        ${chips ? `<ul class="pildoras" aria-label="Herramientas">${chips}</ul>` : ""}
+        <div class="medidor-fila">
+          ${medidorHTML(c)}
+          <span class="medidor-txt">${c.ok === c.total ? "Ficha completa" : `Ficha ${c.ok} de ${c.total}`}</span>
+        </div>
+        <button class="abrir" data-id="${esc(m.id)}">Abrir ficha<span class="solo-lectores"> de ${esc(m.nombre)}</span></button>
+        ${hecho ? `<span class="sello${anima ? " nuevo" : ""}">Repasado</span>` : ""}
+      </div>
+    </article>`;
+}
+
 function pintarTarjetas() {
   const visibles = filtrados();
-  $("rejilla").innerHTML = visibles.length ? visibles.map(m => {
-    const c = completitud(m);
-    const completa = c.ok === c.total;
-    return `
-    <article class="tarjeta${repasados.includes(m.id) ? " repasada" : ""}">
-      <span class="icono" aria-hidden="true">${esc(m.icono || "📘")}</span>
-      <h3>${esc(m.nombre)}</h3>
-      <p class="docente">${esc(m.docente)}</p>
-      <p>${esc(m.resumen)}</p>
-      <p class="insig">
-        ${repasados.includes(m.id) ? '<span class="sello">✓ Repasado</span>' : ""}
-        <span class="ficha-estado${completa ? " completa" : ""}" title="Mínimos de la anatomía de la ficha">
-          ${completa ? "✓ Ficha completa" : `Ficha ${c.ok}/${c.total}`}
-        </span>
-      </p>
-      <button class="boton" data-id="${esc(m.id)}">Abrir ficha</button>
-    </article>`;
-  }).join("") : `
+  $("rejilla").classList.toggle("mosaico", visibles.length >= 5);
+  $("rejilla").innerHTML = visibles.length ? visibles.map(carpetaHTML).join("") : `
     <div class="vacio">
-      <p>😕 No encontramos módulos con esa búsqueda.</p>
-      <p class="suave">Prueba con otra palabra (por ejemplo una herramienta o un programa) o quita los filtros.</p>
-      <button class="boton" data-limpiar="1">Limpiar filtros</button>
+      <p>No hay módulos con esa búsqueda</p>
+      <p class="suave">Prueba con otra palabra, por ejemplo una herramienta o un programa, o quita los filtros.</p>
+      <button class="boton" data-limpiar="1">Quitar filtros</button>
     </div>`;
 
   $("conteo").textContent = `Mostrando ${visibles.length} de ${MODULOS.length} módulos`;
   $("contador").textContent = `${MODULOS.length} módulos en el mapa del año`;
   $("filtroActivo").innerHTML = etiqueta
-    ? `Tecnología: <b>${esc(etiqueta)}</b> · <button class="enlace" id="quitarFiltro">Quitar</button>`
+    ? `Tecnología: <b>${esc(etiqueta)}</b> <button class="enlace" id="quitarFiltro">Quitar</button>`
     : "";
   pintarProgreso();
 }
 
-/* ---------- Progreso del repaso ---------- */
+/* ---------- Progreso del repaso: tira de bloques + barra ---------- */
+function pintarTira() {
+  $("tira").innerHTML = MODULOS.map(m => {
+    const hecho = repasados.includes(m.id);
+    return `<button class="bloque${hecho ? " hecho" : ""}" style="${estiloColor(colorDe(m))}" data-id="${esc(m.id)}"
+      title="${esc(m.nombre)}" aria-label="${esc(m.nombre)}: ${hecho ? "repasado" : "pendiente"}. Abrir ficha">${esc(m.icono || "📘")}</button>`;
+  }).join("");
+}
+
 function pintarProgreso() {
   const total = MODULOS.length || 1;
   const pct = Math.round((repasados.length / total) * 100);
+  pintarTira();
   $("progresoBarra").style.width = pct + "%";
   $("progreso").setAttribute("aria-valuenow", String(pct));
   $("progresoTxt").textContent = pct === 100
-    ? "🎉 ¡Repasaste todo el año! 100 %"
-    : `Repasados: ${repasados.length} de ${MODULOS.length} (${pct} %)`;
+    ? "¡Repasaste todo el año!"
+    : `Repasaste ${repasados.length} de ${MODULOS.length} módulos (${pct} %)`;
   const completas = MODULOS.filter(m => { const c = completitud(m); return c.ok === c.total; }).length;
   $("fichasTxt").textContent = `Fichas completas: ${completas} de ${MODULOS.length}`;
 }
@@ -148,20 +198,22 @@ function pintarNube() {
   const cuenta = {};
   MODULOS.forEach(m => (m.herramientas || []).forEach(h => { cuenta[h] = (cuenta[h] || 0) + 1; }));
   const nombres = Object.keys(cuenta).sort((a, b) => a.localeCompare(b, "es"));
-  $("nubeTec").innerHTML = nombres.map(n => {
-    const tam = Math.min(0.95 + cuenta[n] * 0.2, 2);
-    return `<button class="etiqueta" style="font-size:${tam}rem" data-tec="${esc(n)}"
-      aria-pressed="${etiqueta === n}">${esc(n)} <small>${cuenta[n]}</small></button>`;
+  const giros = [-2, 1.5, -1, 2, 0];
+  $("nubeTec").innerHTML = nombres.map((n, i) => {
+    const col = PALETA[i % PALETA.length];
+    const tam = Math.min(1 + cuenta[n] * 0.22, 2.1);
+    return `<button class="etiqueta" style="${estiloColor(col)};--giro:${giros[i % giros.length]}deg;font-size:${tam}rem"
+      data-tec="${esc(n)}" aria-pressed="${etiqueta === n}">${esc(n)}<small>${cuenta[n]}</small></button>`;
   }).join("");
 }
 
-/* ---------- Línea de tiempo animada ---------- */
+/* ---------- Línea de tiempo ---------- */
 function pintarLinea() {
   $("lineaTiempo").innerHTML = MODULOS.map(m => `
-    <li class="hito">
+    <li class="hito" style="${estiloColor(colorDe(m))}">
       <span class="punto" aria-hidden="true">${esc(m.icono || "•")}</span>
       <div class="hito-cuerpo">
-        <span class="periodo">${esc(m.periodo || "")}</span>
+        ${m.periodo ? `<span class="periodo">${esc(m.periodo)}</span>` : ""}
         <h3>${esc(m.nombre)}</h3>
         <p>${esc(m.resumen)}</p>
       </div>
@@ -187,16 +239,17 @@ let pos = 0;
 function construirMazo() {
   const cartas = [];
   MODULOS.forEach(m => {
+    const col = colorDe(m);
     if (m.flashcards && m.flashcards.length) {
-      m.flashcards.forEach(c => cartas.push({ mod: m.nombre, p: c.p, r: c.r }));
+      m.flashcards.forEach(c => cartas.push({ mod: m.nombre, col, p: c.p, r: c.r }));
     } else {
       // Tarjetas automáticas a partir de los datos del módulo
       if ((m.herramientas || []).length)
-        cartas.push({ mod: m.nombre, p: `¿Qué herramientas usaste en «${m.nombre}»?`, r: m.herramientas.join(", ") });
+        cartas.push({ mod: m.nombre, col, p: `¿Qué herramientas usaste en «${m.nombre}»?`, r: m.herramientas.join(", ") });
       if ((m.programas || []).length)
-        cartas.push({ mod: m.nombre, p: `¿Con qué programas trabajaste en «${m.nombre}»?`, r: m.programas.join(", ") });
+        cartas.push({ mod: m.nombre, col, p: `¿Con qué programas trabajaste en «${m.nombre}»?`, r: m.programas.join(", ") });
       if ((m.aprendizajes || []).length)
-        cartas.push({ mod: m.nombre, p: `Menciona lo que aprendiste en «${m.nombre}».`, r: m.aprendizajes.join(" · ") });
+        cartas.push({ mod: m.nombre, col, p: `Menciona lo que aprendiste en «${m.nombre}».`, r: m.aprendizajes.join(". ") });
     }
   });
   return cartas;
@@ -207,14 +260,16 @@ function pintarCarta() {
   const carta = $("carta");
   carta.classList.remove("vuelta");
   if (!c) {
-    $("cartaFrente").textContent = "Todavía no hay tarjetas.";
+    $("cartaFrente").textContent = "Todavía no hay fichas de repaso.";
     $("cartaDorso").textContent = "";
     $("cartaNum").textContent = "";
     return;
   }
+  carta.style.setProperty("--mc", c.col);
+  carta.style.setProperty("--mc-tx", textoSobre(c.col));
   $("cartaFrente").innerHTML = `<small>${esc(c.mod)}</small>${esc(c.p)}`;
   $("cartaDorso").innerHTML = `<small>Respuesta</small>${esc(c.r)}`;
-  $("cartaNum").textContent = `${pos + 1} / ${mazo.length}`;
+  $("cartaNum").textContent = `${pos + 1} de ${mazo.length}`;
 }
 
 function voltear() {
@@ -247,7 +302,7 @@ const LOGROS = [
   { id: "mitad",   ico: "🚀", t: "A mitad de camino",   d: "Repasa la mitad de los módulos",   ok: () => MODULOS.length > 0 && repasados.length >= Math.ceil(MODULOS.length / 2) },
   { id: "todos",   ico: "🏆", t: "Año completo",        d: "Repasa todos los módulos",         ok: () => MODULOS.length > 0 && repasados.length >= MODULOS.length },
   { id: "curioso", ico: "🔎", t: "Curioso",             d: "Abre 3 fichas distintas",          ok: () => vistos.length >= 3 },
-  { id: "cartas",  ico: "🃏", t: "Maestro de tarjetas", d: "Voltea 10 flashcards",             ok: () => volteadas >= 10 },
+  { id: "cartas",  ico: "🃏", t: "Maestro de fichas",   d: "Voltea 10 fichas de repaso",       ok: () => volteadas >= 10 },
   { id: "fichas",  ico: "✅", t: "Fichas impecables",   d: "Completa los mínimos de todas las fichas", ok: () => MODULOS.length > 0 && MODULOS.every(m => { const c = completitud(m); return c.ok === c.total; }) }
 ];
 
@@ -265,17 +320,17 @@ function evaluarLogros(avisar) {
     if (l.ok() && !desbloqueados.includes(l.id)) {
       desbloqueados.push(l.id);
       guardar(LS.log, desbloqueados);
-      if (avisar) toast(`${l.ico} ¡Logro desbloqueado: ${l.t}!`);
+      if (avisar) toast(`${l.ico} Logro desbloqueado: ${l.t}`);
     }
   });
   pintarLogros();
 }
 
 function pintarLogros() {
-  $("insignias").innerHTML = LOGROS.map(l => {
+  $("insignias").innerHTML = LOGROS.map((l, i) => {
     const on = desbloqueados.includes(l.id);
-    return `<div class="insignia${on ? " on" : ""}">
-      <span class="ico" aria-hidden="true">${on ? l.ico : "🔒"}</span>
+    return `<div class="insignia${on ? " on" : ""}" style="--mc:${PALETA[i % PALETA.length]}">
+      <span class="ico" aria-hidden="true">${l.ico}</span>
       <b>${esc(l.t)}</b>
       <small>${esc(l.d)}</small>
       <span class="solo-lectores">${on ? "Desbloqueado" : "Bloqueado"}</span>
@@ -293,11 +348,10 @@ function confeti() {
   cv.height = window.innerHeight;
   document.body.appendChild(cv);
   const ctx = cv.getContext("2d");
-  const colores = ["#22d3ee", "#f046d2", "#ffb224", "#34f5a0"];
   const piezas = Array.from({ length: 140 }, () => ({
     x: Math.random() * cv.width, y: -20 - Math.random() * cv.height * 0.5,
     vx: (Math.random() - 0.5) * 3, vy: 2 + Math.random() * 4,
-    s: 5 + Math.random() * 6, c: colores[Math.floor(Math.random() * colores.length)], r: Math.random() * 6
+    s: 5 + Math.random() * 6, c: PALETA[Math.floor(Math.random() * PALETA.length)], r: Math.random() * 6
   }));
   const inicio = performance.now();
   (function cuadro(t) {
@@ -317,7 +371,7 @@ function confeti() {
 
 function celebrar() {
   confeti();
-  setTimeout(() => toast("🎉 ¡100 %! Repasaste todos los módulos del año"), 1800);
+  setTimeout(() => toast("🎉 100 %: repasaste todos los módulos del año"), 1800);
 }
 
 /* ---------- Ficha del módulo (con enlace directo y videos) ---------- */
@@ -327,13 +381,13 @@ function videoHTML(v) {
     return `<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/${m[1]}"
       title="${esc(v.titulo)}" loading="lazy" allowfullscreen></iframe></div>`;
   }
-  return `<p><a href="${esc(v.url)}" target="_blank" rel="noopener">▶ ${esc(v.titulo)}</a></p>`;
+  return `<p><a href="${esc(v.url)}" target="_blank" rel="noopener">${esc(v.titulo)}</a></p>`;
 }
 
 function estadoFichaHTML(m) {
   const c = completitud(m);
   return `<details class="estado-ficha"${c.ok === c.total ? "" : " open"}>
-    <summary>Estado de la ficha: ${c.ok}/${c.total} mínimos cumplidos</summary>
+    <summary>Estado de la ficha: ${c.ok} de ${c.total} mínimos cumplidos</summary>
     <ul class="mins">${c.detalle.map(d =>
       `<li class="${d.ok ? "ok" : "falta"}">${d.ok ? "✓" : "✗"} ${esc(d.etq)}: ${d.n} de ${d.min}</li>`).join("")}</ul>
   </details>`;
@@ -347,29 +401,40 @@ function abrirFicha(id, sinHash) {
     guardar(LS.vis, vistos);
     evaluarLogros(true);
   }
+  const col = colorDe(m);
   const hecho = repasados.includes(id);
+  $("ficha").style.setProperty("--mc", col);
+  $("ficha").style.setProperty("--mc-tx", textoSobre(col));
   $("fichaContenido").innerHTML = `
-    <h2 id="fichaTitulo">${esc(m.icono || "")} ${esc(m.nombre)}</h2>
-    <p class="docente">${esc(m.docente)}${m.periodo ? " · " + esc(m.periodo) : ""}</p>
-    <p>${esc(m.resumen)}</p>
-    ${estadoFichaHTML(m)}
-    <h3>Lo que aprendí</h3><ul>${lista(m.aprendizajes)}</ul>
-    <h3>Instrumentos</h3><ul>${lista(m.instrumentos)}</ul>
-    <h3>Programas</h3><ul>${lista(m.programas)}</ul>
-    <h3>Herramientas</h3><ul>${lista(m.herramientas)}</ul>
-    <h3>Recursos</h3><ul>${enlaces(m.recursos)}</ul>
-    <h3>Evidencias</h3><ul>${enlaces(m.evidencias)}</ul>
-    <h3>Tutoriales en video</h3>
-    ${(m.videos && m.videos.length) ? m.videos.map(videoHTML).join("") : "<p class='suave'>Pendiente</p>"}
-    <p class="acciones">
-      <button class="boton" id="marcar" data-id="${esc(id)}">${hecho ? "✓ Repasado (clic para desmarcar)" : "Marcar como repasado"}</button>
-      <button class="boton sec" id="copiarEnlace">🔗 Copiar enlace</button>
-    </p>
+    <div class="ficha-cab">
+      <h2 id="fichaTitulo"><span aria-hidden="true">${esc(m.icono || "")}</span> ${esc(m.nombre)}</h2>
+      <div class="tags">
+        <span>${esc(m.docente)}</span>
+        ${m.periodo ? `<span>${esc(m.periodo)}</span>` : ""}
+      </div>
+    </div>
+    <div class="ficha-cuerpo">
+      <p>${esc(m.resumen)}</p>
+      ${estadoFichaHTML(m)}
+      <h3>Lo que aprendí</h3><ul>${lista(m.aprendizajes)}</ul>
+      <h3>Instrumentos</h3><ul>${lista(m.instrumentos)}</ul>
+      <h3>Programas</h3><ul class="pildoras">${pildoras(m.programas)}</ul>
+      <h3>Herramientas</h3><ul class="pildoras">${pildoras(m.herramientas)}</ul>
+      <h3>Recursos</h3><ul>${enlaces(m.recursos)}</ul>
+      <h3>Evidencias</h3><ul>${enlaces(m.evidencias)}</ul>
+      <h3>Tutoriales en video</h3>
+      ${(m.videos && m.videos.length) ? m.videos.map(videoHTML).join("") : "<p class='suave'>Pendiente</p>"}
+      <p class="acciones">
+        <button class="boton" id="marcar" data-id="${esc(id)}">${hecho ? "Repasado (clic para desmarcar)" : "Marcar como repasado"}</button>
+        <button class="boton sec" id="copiarEnlace">Copiar enlace</button>
+      </p>
+    </div>
   `;
   if (!sinHash) {
     try { history.replaceState(null, "", "#modulo=" + id); } catch (e) {}
   }
   if (!$("ficha").open) $("ficha").showModal();
+  $("ficha").scrollTop = 0;   // cada ficha abre desde arriba
 }
 
 function alternarRepasado(id) {
@@ -377,10 +442,11 @@ function alternarRepasado(id) {
   const agregado = i === -1;
   if (agregado) repasados.push(id); else repasados.splice(i, 1);
   guardar(LS.rep, repasados);
+  pendienteSello = agregado ? id : null;
   pintarTarjetas();
   evaluarLogros(true);
   const b = $("marcar");
-  if (b) b.textContent = repasados.includes(id) ? "✓ Repasado (clic para desmarcar)" : "Marcar como repasado";
+  if (b) b.textContent = repasados.includes(id) ? "Repasado (clic para desmarcar)" : "Marcar como repasado";
   // Al llegar al 100 %: cerrar la ficha (el diálogo tapa el confeti) y celebrar
   if (agregado && repasados.length === MODULOS.length) {
     $("ficha").close();
@@ -390,9 +456,8 @@ function alternarRepasado(id) {
 
 function copiarEnlace() {
   const url = location.href;
-  const ok = () => toast("🔗 Enlace copiado");
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(ok, () => toast("No se pudo copiar el enlace"));
+    navigator.clipboard.writeText(url).then(() => toast("Enlace copiado"), () => toast("No se pudo copiar el enlace"));
   } else {
     toast("Copia el enlace desde la barra de direcciones");
   }
@@ -406,8 +471,8 @@ function abrirDesdeHash() {
 
 /* ---------- Reiniciar progreso ---------- */
 function reiniciar() {
-  if (!window.confirm("¿Borrar tu progreso (módulos repasados, logros y tarjetas volteadas)?")) return;
-  repasados = []; vistos = []; volteadas = 0; desbloqueados = [];
+  if (!window.confirm("¿Borrar tu progreso (módulos repasados, logros y fichas volteadas)?")) return;
+  repasados = []; vistos = []; volteadas = 0; desbloqueados = []; pendienteSello = null;
   [LS.rep, LS.vis, LS.vol, LS.log].forEach(quitar);
   pintarTarjetas();
   pintarLogros();
@@ -422,6 +487,10 @@ function pintarEquipo() {
 /* ---------- Eventos ---------- */
 $("rejilla").addEventListener("click", e => {
   if (e.target.closest("button[data-limpiar]")) { limpiarFiltros(); return; }
+  const b = e.target.closest("button[data-id]");
+  if (b) abrirFicha(b.dataset.id);
+});
+$("tira").addEventListener("click", e => {
   const b = e.target.closest("button[data-id]");
   if (b) abrirFicha(b.dataset.id);
 });
@@ -450,10 +519,14 @@ $("fichaContenido").addEventListener("click", e => {
 });
 $("cerrar").addEventListener("click", () => $("ficha").close());
 $("ficha").addEventListener("click", e => { if (e.target === $("ficha")) $("ficha").close(); });
-// Al cerrar la ficha (botón, clic fuera o Esc) se limpia #modulo=... de la URL
+// Al cerrar la ficha (botón, clic fuera o Esc): limpia #modulo=... y deja caer el sello
 $("ficha").addEventListener("close", () => {
   if (/^#modulo=/.test(location.hash)) {
     try { history.replaceState(null, "", location.pathname + location.search + "#modulos"); } catch (e) {}
+  }
+  if (pendienteSello) {
+    pintarTarjetas();
+    pendienteSello = null;
   }
 });
 window.addEventListener("hashchange", abrirDesdeHash);

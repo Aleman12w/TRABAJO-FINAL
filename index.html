@@ -5,40 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HUB 3DS·A · Repaso del año</title>
   <meta name="description" content="Portal de repaso de 3.º Bachillerato en Desarrollo de Software «A»">
-  <meta name="theme-color" content="#0b1020">
+  <meta name="theme-color" content="#F3F6FB">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
+  <a class="saltar" href="#modulos">Saltar a los módulos</a>
+
   <header class="barra">
     <a class="logo" href="#inicio">HUB&nbsp;3DS·A</a>
     <nav aria-label="Navegación principal">
       <a href="#modulos">Módulos</a>
       <a href="#nube">Tecnologías</a>
-      <a href="#linea">Línea de tiempo</a>
-      <a href="#flashcards">Flashcards</a>
+      <a href="#linea">Año</a>
+      <a href="#flashcards">Repaso</a>
       <a href="#logros">Logros</a>
     </nav>
   </header>
 
   <main>
     <section id="inicio" class="portada">
-      <h1>Repasa el año,<br>módulo por módulo</h1>
-      <p>Qué hicimos, con qué programas y herramientas, y dónde seguir aprendiendo.</p>
-      <a class="boton" href="#modulos">Ver módulos</a>
-      <p class="contador" id="contador"></p>
+      <h1>Nuestro año,<br>módulo por módulo</h1>
+      <p class="lead">Qué hicimos, con qué programas y herramientas, y dónde seguir aprendiendo.</p>
+
+      <div class="tira" id="tira" role="group" aria-label="Avance por módulo: toca uno para abrir su ficha"></div>
       <div class="progreso" id="progreso" role="progressbar" aria-label="Progreso del repaso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="progresoBarra"></i></div>
-      <p class="contador" id="progresoTxt" aria-live="polite"></p>
-      <p class="contador" id="fichasTxt"></p>
+      <p class="avance" id="progresoTxt" aria-live="polite"></p>
+      <p class="avance suave" id="fichasTxt"></p>
+      <p class="inst"><span id="contador"></span>. Instituto Nacional Cantón Lourdes (INDEL), 3.º Bachillerato en Desarrollo de Software «A».</p>
     </section>
 
     <section id="modulos">
       <h2>Módulos del año</h2>
       <div class="buscador">
         <label for="buscar" class="solo-lectores">Buscar módulos</label>
-        <input type="search" id="buscar" placeholder="Buscar módulo, programa o herramienta…" autocomplete="off">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="buscar" placeholder="Busca un módulo, programa o herramienta" autocomplete="off">
         <kbd title="Atajo de teclado">/</kbd>
       </div>
       <div class="chips" id="filtrosDoc" role="group" aria-label="Filtrar por docente"></div>
@@ -48,19 +55,19 @@
     </section>
 
     <section id="nube">
-      <h2>Nube de tecnologías</h2>
-      <p class="suave">Haz clic en una tecnología para filtrar los módulos donde la usaste.</p>
+      <h2>Tecnologías que usamos</h2>
+      <p class="suave sub">El tamaño indica en cuántos módulos aparece. Toca una para filtrar los módulos.</p>
       <div class="nube" id="nubeTec"></div>
     </section>
 
     <section id="linea">
-      <h2>Línea de tiempo del año</h2>
+      <h2>El año en una ruta</h2>
       <ol class="linea" id="lineaTiempo"></ol>
     </section>
 
     <section id="flashcards">
-      <h2>Flashcards de repaso</h2>
-      <p class="suave">Intenta responder antes de voltear la tarjeta. Clic, Enter o Espacio para voltear.</p>
+      <h2>Repasa con fichas</h2>
+      <p class="suave sub">Responde en voz alta y luego voltea la ficha. Clic, Enter o Espacio para voltear.</p>
       <div class="mazo">
         <button class="carta" id="carta" aria-live="polite">
           <span class="interior">
@@ -69,10 +76,10 @@
           </span>
         </button>
         <div class="controles">
-          <button class="boton sec" id="prev">← Anterior</button>
+          <button class="boton sec" id="prev">Anterior</button>
           <span id="cartaNum" class="suave"></span>
-          <button class="boton sec" id="next">Siguiente →</button>
-          <button class="boton sec" id="barajar">🔀 Barajar</button>
+          <button class="boton sec" id="next">Siguiente</button>
+          <button class="boton sec" id="barajar">Barajar</button>
         </div>
       </div>
     </section>
@@ -80,12 +87,12 @@
     <section id="logros">
       <h2>Logros</h2>
       <div class="insignias" id="insignias"></div>
-      <p style="margin-top:18px"><button class="boton sec" id="reiniciar">Reiniciar mi progreso</button></p>
+      <p class="fila-reinicio"><button class="boton sec" id="reiniciar">Reiniciar mi progreso</button></p>
     </section>
 
     <section id="equipo">
       <h2>Equipo</h2>
-      <ul id="integrantes"></ul>
+      <ul class="equipo" id="integrantes"></ul>
     </section>
   </main>
 
@@ -96,7 +103,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <footer>Instituto Nacional Cantón Lourdes (INDEL) · 3.º DS «A» · Versión v0.5</footer>
+  <footer>Instituto Nacional Cantón Lourdes (INDEL). 3.º DS «A». Versión v0.6</footer>
 
   <script src="data/modulos.js"></script>
   <script src="js/app.js"></script>
