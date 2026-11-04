@@ -51,9 +51,7 @@ const MODULOS = [
     programas: ["Canva", "Adobe Photoshop", "CapCut"],
     herramientas: ["Diseño gráfico", "Edición multimedia", "Recursos digitales"],
     recursos: [],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -79,9 +77,9 @@ const MODULOS = [
       { titulo: "Documentación de CSS", url: "https://developer.mozilla.org/es/docs/Web/CSS" },
       { titulo: "JavaScript", url: "https://developer.mozilla.org/es/docs/Web/JavaScript" }
     ],
-    evidencias: [],
+  
     flashcards: [],
-    videos: [],
+  
     quiz: []
   },
 
@@ -103,9 +101,9 @@ const MODULOS = [
     programas: ["Google Translate", "Duolingo"],
     herramientas: ["Diccionario técnico", "Práctica oral", "Audios en inglés"],
     recursos: [],
-    evidencias: [],
+  
     flashcards: [],
-    videos: [],
+
     quiz: []
   },
 
@@ -127,9 +125,9 @@ const MODULOS = [
     programas: ["Visual Studio Code", "GitHub"],
     herramientas: ["HTML", "CSS", "JavaScript", "Metodologías de desarrollo"],
     recursos: [],
-    evidencias: [],
+  
     flashcards: [],
-    videos: [],
+    
     quiz: []
   },
 
@@ -151,9 +149,9 @@ const MODULOS = [
     programas: ["PSeInt", "Visual Studio Code"],
     herramientas: ["Pseudocódigo", "Diagramas de flujo", "Lógica de programación"],
     recursos: [],
-    evidencias: [],
+    
     flashcards: [],
-    videos: [],
+   
     quiz: []
   },
 
@@ -175,9 +173,9 @@ const MODULOS = [
     programas: ["Microsoft Word", "Draw.io"],
     herramientas: ["Diagramas", "Encuestas", "Entrevistas", "Historias de usuario"],
     recursos: [],
-    evidencias: [],
+   
     flashcards: [],
-    videos: [],
+
     quiz: []
   },
 
@@ -199,9 +197,9 @@ const MODULOS = [
     programas: ["Microsoft Word", "Microsoft Excel"],
     herramientas: ["Normas ISO", "Documentación técnica", "Control de calidad"],
     recursos: [],
-    evidencias: [],
+ 
     flashcards: [],
-    videos: [],
+  
     quiz: []
   },
 
@@ -223,9 +221,9 @@ const MODULOS = [
     programas: ["Microsoft Word", "Microsoft Excel", "Canva"],
     herramientas: ["Organigramas", "Presupuestos", "Planificación empresarial"],
     recursos: [],
-    evidencias: [],
+   
     flashcards: [],
-    videos: [],
+    
     quiz: []
   },
 
@@ -252,9 +250,9 @@ const MODULOS = [
     programas: ["Cisco Packet Tracer", "Draw.io"],
     herramientas: ["Routers", "Switches", "Cable UTP", "Conectores RJ45"],
     recursos: [],
-    evidencias: [],
+  
     flashcards: [],
-    videos: [],
+   
     quiz: []
   },
 
@@ -276,9 +274,7 @@ const MODULOS = [
     programas: ["Google Translate", "Duolingo"],
     herramientas: ["Diccionario técnico", "Prácticas de conversación", "Audios"],
     recursos: [],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -300,9 +296,9 @@ const MODULOS = [
     programas: ["Microsoft Excel", "Microsoft Word", "Canva"],
     herramientas: ["Estudios de mercado", "Presupuestos", "Análisis FODA"],
     recursos: [],
-    evidencias: [],
+  
     flashcards: [],
-    videos: [],
+  
     quiz: []
   },
 
@@ -326,9 +322,9 @@ const MODULOS = [
     recursos: [
       { titulo: "Documentación de MySQL", url: "https://dev.mysql.com/doc/" }
     ],
-    evidencias: [],
+  
     flashcards: [],
-    videos: [],
+   
     quiz: []
   },
 
@@ -350,9 +346,7 @@ const MODULOS = [
     programas: ["Draw.io", "Visual Studio", "StarUML"],
     herramientas: ["UML", "Diagramas de clases", "Diagramas de componentes"],
     recursos: [],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -376,9 +370,7 @@ const MODULOS = [
     recursos: [
       { titulo: "Documentación de C#", url: "https://learn.microsoft.com/es-es/dotnet/csharp/" }
     ],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -400,9 +392,7 @@ const MODULOS = [
     programas: ["Visual Studio Code", "Canva", "GitHub"],
     herramientas: ["Prototipado", "Diseño de interfaces", "Metodologías de proyectos"],
     recursos: [],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -429,9 +419,7 @@ const MODULOS = [
     programas: ["Visual Studio", "Visual Studio Code", "GitHub"],
     herramientas: ["C#", "HTML", "CSS", "JavaScript", "Metodologías ágiles"],
     recursos: [],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -453,9 +441,7 @@ const MODULOS = [
     programas: ["Google Translate", "Duolingo"],
     herramientas: ["Diccionario técnico", "Audios", "Práctica oral"],
     recursos: [],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -477,9 +463,7 @@ const MODULOS = [
     programas: ["Microsoft Word", "Draw.io", "Microsoft Excel"],
     herramientas: ["Diagramas UML", "Documentación técnica", "Manuales de usuario"],
     recursos: [],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -504,9 +488,7 @@ const MODULOS = [
       { titulo: "Documentación de MySQL", url: "https://dev.mysql.com/doc/" },
       { titulo: "Documentación de SQL Server", url: "https://learn.microsoft.com/es-es/sql/sql-server/" }
     ],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -530,9 +512,7 @@ const MODULOS = [
     recursos: [
       { titulo: "Documentación oficial de Arduino", url: "https://docs.arduino.cc/" }
     ],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -556,9 +536,7 @@ const MODULOS = [
     recursos: [
       { titulo: "Documentación de .NET", url: "https://learn.microsoft.com/es-es/dotnet/" }
     ],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -582,9 +560,7 @@ const MODULOS = [
     recursos: [
       { titulo: "Documentación de .NET MAUI", url: "https://learn.microsoft.com/es-es/dotnet/maui/" }
     ],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   },
 
@@ -606,9 +582,7 @@ const MODULOS = [
     programas: ["Windows", "CrystalDiskInfo", "Windows Defender"],
     herramientas: ["Destornilladores", "Multímetro", "Aire comprimido", "Herramientas de diagnóstico"],
     recursos: [],
-    evidencias: [],
     flashcards: [],
-    videos: [],
     quiz: []
   }
 
