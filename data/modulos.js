@@ -1359,3 +1359,84 @@ modulo.quiz.forEach((pregunta, index) => {
   console.log(`${index + 1}. ${pregunta.pregunta}`);
   console.log(pregunta.opciones);
 });
+
+// ==========================================
+// QUIZ DINÁMICOS PARA TODOS LOS MÓDULOS
+// ==========================================
+
+// Función para mezclar preguntas y opciones aleatoriamente
+function mezclarArray(lista) {
+    const copia = [...lista];
+
+    for (let i = copia.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copia[i], copia[j]] = [copia[j], copia[i]];
+    }
+
+    return copia;
+}
+
+// Crear banco de preguntas para cada módulo
+function crearBancoQuiz(modulo) {
+    const aprendizajes = modulo.aprendizajes || [];
+
+    return aprendizajes.map((aprendizaje, index) => {
+        const otrosAprendizajes = aprendizajes.filter(
+            (item, i) => i !== index
+        );
+
+        const distractores = mezclarArray([
+            ...otrosAprendizajes,
+            "Un tema que no corresponde al contenido del módulo",
+            "Una actividad sin relación con el área de estudio"
+        ]).slice(0, 3);
+
+        return {
+            pregunta: `¿Cuál de las siguientes opciones corresponde a un aprendizaje de "${modulo.nombre}"?`,
+            opciones: mezclarArray([
+                aprendizaje,
+                ...distractores
+            ]),
+            respuesta: aprendizaje,
+            explicacion: `La respuesta es correcta porque "${aprendizaje}" forma parte de los aprendizajes de este módulo.`
+        };
+    });
+}
+
+// Generar el banco de preguntas para todos los módulos
+MODULOS.forEach(modulo => {
+    modulo.bancoQuiz = crearBancoQuiz(modulo);
+});
+
+// Obtener 3 preguntas aleatorias cada vez que se abre un módulo
+function obtenerQuizAleatorio(moduloId, cantidad = 3) {
+    const modulo = MODULOS.find(m => m.id === moduloId);
+
+    if (!modulo) {
+        console.error("No se encontró el módulo:", moduloId);
+        return [];
+    }
+
+    const banco = modulo.bancoQuiz || [];
+
+    return mezclarArray(banco)
+        .slice(0, cantidad)
+        .map(pregunta => ({
+            ...pregunta,
+            opciones: mezclarArray(pregunta.opciones)
+        }));
+}
+
+// Obtener el módulo con sus 3 preguntas aleatorias
+function obtenerModuloConQuiz(moduloId) {
+    const modulo = MODULOS.find(m => m.id === moduloId);
+
+    if (!modulo) {
+        return null;
+    }
+
+    return {
+        ...modulo,
+        quiz: obtenerQuizAleatorio(moduloId, 3)
+    };
+}
