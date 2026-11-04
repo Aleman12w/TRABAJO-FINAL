@@ -24,10 +24,9 @@
    ===================================================== */
 
 const EQUIPO = [
-  "Integrante 1 · Líder Git",
-  "Integrante 2 · Diseñador UI",
-  "Integrante 3 · Curador de contenido",
-  "Integrante 4 · QA y accesibilidad"
+  "Integrante 1 · Paola Michelle Ramirez Sanchez",
+  "Integrante 2 · Jose Antonio Aleman Perez",
+
 ];
 
 const MODULOS = [
