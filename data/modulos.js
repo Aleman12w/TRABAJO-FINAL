@@ -614,3 +614,738 @@ const MODULOS = [
   }
 
 ];
+// ==========================================
+// RECURSOS Y QUIZ DE LOS 23 MÓDULOS
+// ==========================================
+
+const contenidoExtra = {
+
+  // ==========================================
+  // PRIMER AÑO
+  // ==========================================
+
+  "diseno-multimedia": {
+    recursos: [
+      { titulo: "Canva - Diseño gráfico", url: "https://www.canva.com/es_es/" },
+      { titulo: "GIMP - Edición de imágenes", url: "https://www.gimp.org/" },
+      { titulo: "Adobe - Tutoriales creativos", url: "https://helpx.adobe.com/es/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es una aplicación multimedia?",
+        opciones: [
+          "Una aplicación que utiliza únicamente texto",
+          "Una aplicación que combina texto, imágenes, audio y video",
+          "Un programa exclusivo para bases de datos",
+          "Un sistema operativo"
+        ],
+        respuesta: "Una aplicación que combina texto, imágenes, audio y video",
+        explicacion: "Las aplicaciones multimedia integran diferentes medios para comunicar información."
+      },
+      {
+        pregunta: "¿Cuál es el propósito principal del diseño de interfaces?",
+        opciones: [
+          "Hacer más difícil el uso de una aplicación",
+          "Eliminar todos los elementos gráficos",
+          "Facilitar la interacción del usuario",
+          "Aumentar el tamaño de los archivos"
+        ],
+        respuesta: "Facilitar la interacción del usuario",
+        explicacion: "Una buena interfaz permite que los usuarios utilicen una aplicación de manera sencilla."
+      }
+    ]
+  },
+
+  "desarrollo-paginas-web": {
+    recursos: [
+      { titulo: "MDN - HTML", url: "https://developer.mozilla.org/es/docs/Web/HTML" },
+      { titulo: "MDN - CSS", url: "https://developer.mozilla.org/es/docs/Web/CSS" },
+      { titulo: "JavaScript - Documentación", url: "https://developer.mozilla.org/es/docs/Web/JavaScript" },
+      { titulo: "W3Schools - Desarrollo web", url: "https://www.w3schools.com/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué lenguaje se utiliza para estructurar una página web?",
+        opciones: ["CSS", "HTML", "Python", "SQL"],
+        respuesta: "HTML",
+        explicacion: "HTML define la estructura y el contenido de una página web."
+      },
+      {
+        pregunta: "¿Para qué se utiliza CSS?",
+        opciones: [
+          "Para administrar bases de datos",
+          "Para diseñar y dar estilos a páginas web",
+          "Para crear sistemas operativos",
+          "Para almacenar información"
+        ],
+        respuesta: "Para diseñar y dar estilos a páginas web",
+        explicacion: "CSS permite modificar colores, tamaños, posiciones y presentación de los elementos."
+      }
+    ]
+  },
+
+  "ingles-sistemas-web": {
+    recursos: [
+      { titulo: "Duolingo - Inglés", url: "https://www.duolingo.com/" },
+      { titulo: "BBC Learning English", url: "https://www.bbc.co.uk/learningenglish" },
+      { titulo: "Cambridge Dictionary", url: "https://dictionary.cambridge.org/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué significa la palabra 'Computer'?",
+        opciones: ["Teléfono", "Computadora", "Impresora", "Teclado"],
+        respuesta: "Computadora",
+        explicacion: "Computer es el término en inglés para computadora."
+      },
+      {
+        pregunta: "¿Qué significa 'Website'?",
+        opciones: ["Base de datos", "Sistema operativo", "Sitio web", "Procesador"],
+        respuesta: "Sitio web",
+        explicacion: "Website hace referencia a un sitio web compuesto por diferentes páginas."
+      }
+    ]
+  },
+
+  "proyectos-tecnologicos-web": {
+    recursos: [
+      { titulo: "MDN - Aprende desarrollo web", url: "https://developer.mozilla.org/es/docs/Learn_web_development" },
+      { titulo: "GitHub - Documentación", url: "https://docs.github.com/es" },
+      { titulo: "Figma - Diseño de interfaces", url: "https://www.figma.com/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Cuál es el primer paso para desarrollar un proyecto web?",
+        opciones: [
+          "Publicar la página",
+          "Identificar el problema y las necesidades",
+          "Comprar un dominio",
+          "Eliminar los archivos"
+        ],
+        respuesta: "Identificar el problema y las necesidades",
+        explicacion: "Antes de desarrollar una solución es necesario conocer qué problema se desea resolver."
+      },
+      {
+        pregunta: "¿Para qué sirve GitHub?",
+        opciones: [
+          "Editar fotografías",
+          "Administrar redes físicas",
+          "Almacenar y gestionar proyectos de código",
+          "Crear documentos de texto"
+        ],
+        respuesta: "Almacenar y gestionar proyectos de código",
+        explicacion: "GitHub permite alojar repositorios y colaborar en proyectos de desarrollo."
+      }
+    ]
+  },
+
+  "algoritmos-logica": {
+    recursos: [
+      { titulo: "PSeInt - Herramienta de pseudocódigo", url: "https://pseint.sourceforge.net/" },
+      { titulo: "Programiz - Aprende programación", url: "https://www.programiz.com/" },
+      { titulo: "Diagramas de flujo - Lucidchart", url: "https://www.lucidchart.com/pages/es/que-es-un-diagrama-de-flujo" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es un algoritmo?",
+        opciones: [
+          "Un conjunto ordenado de pasos para resolver un problema",
+          "Un dispositivo electrónico",
+          "Un lenguaje de diseño",
+          "Una base de datos"
+        ],
+        respuesta: "Un conjunto ordenado de pasos para resolver un problema",
+        explicacion: "Un algoritmo establece instrucciones organizadas para alcanzar un resultado."
+      },
+      {
+        pregunta: "¿Qué representa un rombo en un diagrama de flujo?",
+        opciones: ["Inicio", "Proceso", "Decisión", "Fin"],
+        respuesta: "Decisión",
+        explicacion: "El rombo representa una condición que permite tomar diferentes caminos."
+      }
+    ]
+  },
+
+  "identificacion-requerimientos": {
+    recursos: [
+      { titulo: "Atlassian - Gestión de requisitos", url: "https://www.atlassian.com/es/agile/product-management/requirements" },
+      { titulo: "Draw.io - Diagramas", url: "https://www.drawio.com/" },
+      { titulo: "Lucidchart - Diagramas UML", url: "https://www.lucidchart.com/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es un requerimiento funcional?",
+        opciones: [
+          "Una característica física de la computadora",
+          "Una función que el sistema debe realizar",
+          "El color de una computadora",
+          "Una conexión de internet"
+        ],
+        respuesta: "Una función que el sistema debe realizar",
+        explicacion: "Los requerimientos funcionales describen las acciones y servicios que debe ofrecer un sistema."
+      },
+      {
+        pregunta: "¿Cuál es una técnica para recopilar requerimientos?",
+        opciones: ["Entrevistas", "Formatear discos", "Instalar programas", "Crear contraseñas"],
+        respuesta: "Entrevistas",
+        explicacion: "Las entrevistas permiten conocer directamente las necesidades de los usuarios."
+      }
+    ]
+  },
+
+  "manual-sistemas-calidad": {
+    recursos: [
+      { titulo: "ISO - Normas internacionales", url: "https://www.iso.org/es/home.html" },
+      { titulo: "ISTQB - Pruebas de software", url: "https://www.istqb.org/" },
+      { titulo: "Atlassian - Calidad de software", url: "https://www.atlassian.com/es/software-testing" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué busca garantizar la calidad del software?",
+        opciones: [
+          "Que el programa tenga muchos colores",
+          "Que el software cumpla los requisitos y funcione correctamente",
+          "Que el programa ocupe más espacio",
+          "Que no tenga documentación"
+        ],
+        respuesta: "Que el software cumpla los requisitos y funcione correctamente",
+        explicacion: "La calidad busca que el software satisfaga las necesidades y expectativas establecidas."
+      },
+      {
+        pregunta: "¿Qué contiene un manual de calidad?",
+        opciones: [
+          "Únicamente imágenes",
+          "Contraseñas de los usuarios",
+          "Procedimientos, políticas y estándares de calidad",
+          "Solamente códigos de programación"
+        ],
+        respuesta: "Procedimientos, políticas y estándares de calidad",
+        explicacion: "El manual establece los lineamientos y procesos para mantener la calidad."
+      }
+    ]
+  },
+
+  "microempresa-cooperativa": {
+    recursos: [
+      { titulo: "CONAMYPE - El Salvador", url: "https://www.conamype.gob.sv/" },
+      { titulo: "OIT - Cooperativas", url: "https://www.ilo.org/" },
+      { titulo: "Canva - Planificación empresarial", url: "https://www.canva.com/es_es/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es una microempresa?",
+        opciones: [
+          "Una organización dedicada exclusivamente a actividades escolares",
+          "Una empresa de pequeña escala",
+          "Una institución gubernamental",
+          "Una organización sin actividades económicas"
+        ],
+        respuesta: "Una empresa de pequeña escala",
+        explicacion: "Una microempresa es una unidad económica de pequeña dimensión."
+      },
+      {
+        pregunta: "¿Qué caracteriza al trabajo cooperativo?",
+        opciones: [
+          "Competir entre todos los integrantes",
+          "Trabajar individualmente",
+          "Colaborar para alcanzar objetivos comunes",
+          "Evitar compartir responsabilidades"
+        ],
+        respuesta: "Colaborar para alcanzar objetivos comunes",
+        explicacion: "La cooperación se basa en la participación y el esfuerzo conjunto."
+      }
+    ]
+  },
+
+  // ==========================================
+  // SEGUNDO AÑO
+  // ==========================================
+
+  "instalaciones-redes-lan": {
+    recursos: [
+      { titulo: "Cisco Networking Academy", url: "https://www.netacad.com/" },
+      { titulo: "Cisco - Fundamentos de redes", url: "https://www.cisco.com/" },
+      { titulo: "Tinkercad - Simulación electrónica", url: "https://www.tinkercad.com/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué significa LAN?",
+        opciones: [
+          "Local Area Network",
+          "Large Access Node",
+          "Logical Application Network",
+          "Long Area Number"
+        ],
+        respuesta: "Local Area Network",
+        explicacion: "LAN significa red de área local y conecta dispositivos dentro de un espacio limitado."
+      },
+      {
+        pregunta: "¿Qué dispositivo permite conectar varios equipos dentro de una red LAN?",
+        opciones: ["Monitor", "Switch", "Impresora", "Escáner"],
+        respuesta: "Switch",
+        explicacion: "Un switch conecta dispositivos dentro de una red local y permite el intercambio de datos."
+      }
+    ]
+  },
+
+  "ingles-arquitectura-bases-datos": {
+    recursos: [
+      { titulo: "BBC Learning English", url: "https://www.bbc.co.uk/learningenglish" },
+      { titulo: "Cambridge Dictionary", url: "https://dictionary.cambridge.org/" },
+      { titulo: "W3Schools - SQL", url: "https://www.w3schools.com/sql/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué significa 'Database'?",
+        opciones: ["Página web", "Base de datos", "Programa", "Teclado"],
+        respuesta: "Base de datos",
+        explicacion: "Database es el término en inglés utilizado para referirse a una base de datos."
+      },
+      {
+        pregunta: "¿Qué significa 'Software Architecture'?",
+        opciones: [
+          "Arquitectura de software",
+          "Mantenimiento físico",
+          "Diseño gráfico",
+          "Red local"
+        ],
+        respuesta: "Arquitectura de software",
+        explicacion: "Software Architecture describe la estructura y organización de un sistema de software."
+      }
+    ]
+  },
+
+  "planes-negocio-cooperativo": {
+    recursos: [
+      { titulo: "CONAMYPE - Emprendimiento", url: "https://www.conamype.gob.sv/" },
+      { titulo: "SCORE - Recursos para negocios", url: "https://www.score.org/" },
+      { titulo: "Canva - Plan de negocios", url: "https://www.canva.com/es_es/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es un plan de negocios?",
+        opciones: [
+          "Una lista de empleados",
+          "Un documento que describe cómo funcionará un negocio",
+          "Un programa informático",
+          "Una base de datos"
+        ],
+        respuesta: "Un documento que describe cómo funcionará un negocio",
+        explicacion: "El plan de negocios establece objetivos, estrategias, recursos y proyecciones."
+      },
+      {
+        pregunta: "¿Para qué sirve un análisis FODA?",
+        opciones: [
+          "Diseñar páginas web",
+          "Crear contraseñas",
+          "Identificar fortalezas, oportunidades, debilidades y amenazas",
+          "Programar aplicaciones"
+        ],
+        respuesta: "Identificar fortalezas, oportunidades, debilidades y amenazas",
+        explicacion: "El análisis FODA permite evaluar la situación interna y externa de un negocio."
+      }
+    ]
+  },
+
+  "componentes-base-datos": {
+    recursos: [
+      { titulo: "Documentación oficial de MySQL", url: "https://dev.mysql.com/doc/" },
+      { titulo: "W3Schools - SQL", url: "https://www.w3schools.com/sql/" },
+      { titulo: "SQLBolt - Tutorial interactivo", url: "https://sqlbolt.com/" },
+      { titulo: "phpMyAdmin", url: "https://www.phpmyadmin.net/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué significa CRUD?",
+        opciones: [
+          "Create, Read, Update, Delete",
+          "Connect, Run, Upload, Download",
+          "Create, Remove, Use, Design",
+          "Code, Read, Update, Develop"
+        ],
+        respuesta: "Create, Read, Update, Delete",
+        explicacion: "CRUD representa las cuatro operaciones básicas para gestionar información."
+      },
+      {
+        pregunta: "¿Para qué sirve una clave primaria?",
+        opciones: [
+          "Para decorar una tabla",
+          "Para identificar de forma única cada registro",
+          "Para eliminar una base de datos",
+          "Para cambiar el nombre de una columna"
+        ],
+        respuesta: "Para identificar de forma única cada registro",
+        explicacion: "La clave primaria identifica de manera única cada fila de una tabla."
+      }
+    ]
+  },
+
+  "diseno-arquitectura-software": {
+    recursos: [
+      { titulo: "IBM - Arquitectura de software", url: "https://www.ibm.com/think/topics/software-architecture" },
+      { titulo: "UML - Object Management Group", url: "https://www.omg.org/spec/UML/" },
+      { titulo: "Draw.io - Diagramas", url: "https://www.drawio.com/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué describe la arquitectura de software?",
+        opciones: [
+          "El aspecto físico de una computadora",
+          "La estructura y organización de un sistema",
+          "La velocidad del internet",
+          "El diseño de una impresora"
+        ],
+        respuesta: "La estructura y organización de un sistema",
+        explicacion: "La arquitectura define los componentes principales y cómo se relacionan."
+      },
+      {
+        pregunta: "¿Para qué se utiliza UML?",
+        opciones: [
+          "Para administrar redes",
+          "Para editar videos",
+          "Para modelar y representar sistemas",
+          "Para crear hojas de cálculo"
+        ],
+        respuesta: "Para modelar y representar sistemas",
+        explicacion: "UML es un lenguaje de modelado visual utilizado en el diseño de software."
+      }
+    ]
+  },
+
+  "programacion-orientada-objetos": {
+    recursos: [
+      { titulo: "Microsoft Learn - C#", url: "https://learn.microsoft.com/es-es/dotnet/csharp/" },
+      { titulo: "Microsoft Learn - POO", url: "https://learn.microsoft.com/es-es/dotnet/csharp/fundamentals/tutorials/oop" },
+      { titulo: "W3Schools - C#", url: "https://www.w3schools.com/cs/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es una clase en programación orientada a objetos?",
+        opciones: [
+          "Un tipo de archivo de imagen",
+          "Una plantilla para crear objetos",
+          "Una base de datos",
+          "Un sistema operativo"
+        ],
+        respuesta: "Una plantilla para crear objetos",
+        explicacion: "Una clase define atributos y métodos que pueden utilizar sus objetos."
+      },
+      {
+        pregunta: "¿Qué es la herencia?",
+        opciones: [
+          "Eliminar una clase",
+          "Copiar archivos manualmente",
+          "Permitir que una clase herede características de otra",
+          "Cambiar el lenguaje de programación"
+        ],
+        respuesta: "Permitir que una clase herede características de otra",
+        explicacion: "La herencia permite reutilizar atributos y métodos de una clase existente."
+      }
+    ]
+  },
+
+  "proyecto-innovador-segundo": {
+    recursos: [
+      { titulo: "IDEO - Design Thinking", url: "https://designthinking.ideo.com/" },
+      { titulo: "Figma - Prototipos", url: "https://www.figma.com/" },
+      { titulo: "GitHub - Proyectos", url: "https://github.com/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué caracteriza a un proyecto innovador?",
+        opciones: [
+          "Que no tenga objetivos",
+          "Que proponga una solución novedosa a una necesidad",
+          "Que no utilice tecnología",
+          "Que no tenga planificación"
+        ],
+        respuesta: "Que proponga una solución novedosa a una necesidad",
+        explicacion: "La innovación busca generar mejoras o soluciones nuevas a problemas existentes."
+      },
+      {
+        pregunta: "¿Qué es un prototipo?",
+        opciones: [
+          "Una versión inicial de una solución",
+          "Un documento financiero",
+          "Una contraseña",
+          "Un sistema operativo"
+        ],
+        respuesta: "Una versión inicial de una solución",
+        explicacion: "Un prototipo permite representar y probar una idea antes de su implementación final."
+      }
+    ]
+  },
+
+  // ==========================================
+  // TERCER AÑO
+  // ==========================================
+
+  "proyecto-innovador-software": {
+    recursos: [
+      { titulo: "GitHub - Documentación", url: "https://docs.github.com/es" },
+      { titulo: "Microsoft Learn - Desarrollo de software", url: "https://learn.microsoft.com/es-es/" },
+      { titulo: "Atlassian - Metodologías ágiles", url: "https://www.atlassian.com/es/agile" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Cuál es una etapa importante en el desarrollo de software?",
+        opciones: [
+          "Ignorar los requisitos",
+          "Análisis y planificación",
+          "Eliminar las pruebas",
+          "Evitar la documentación"
+        ],
+        respuesta: "Análisis y planificación",
+        explicacion: "Antes de desarrollar un sistema es importante analizar el problema y planificar la solución."
+      },
+      {
+        pregunta: "¿Para qué se realizan pruebas de software?",
+        opciones: [
+          "Para aumentar el tamaño del proyecto",
+          "Para comprobar que el sistema funciona correctamente",
+          "Para eliminar todos los archivos",
+          "Para cambiar el nombre del programa"
+        ],
+        respuesta: "Para comprobar que el sistema funciona correctamente",
+        explicacion: "Las pruebas ayudan a detectar errores y verificar que el software cumpla sus requisitos."
+      }
+    ]
+  },
+
+  "ingles-mantenimiento-sistemas": {
+    recursos: [
+      { titulo: "BBC Learning English", url: "https://www.bbc.co.uk/learningenglish" },
+      { titulo: "Cambridge Dictionary", url: "https://dictionary.cambridge.org/" },
+      { titulo: "Microsoft Learn", url: "https://learn.microsoft.com/es-es/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué significa 'Operating System'?",
+        opciones: ["Sistema operativo", "Base de datos", "Red local", "Página web"],
+        respuesta: "Sistema operativo",
+        explicacion: "Operating System es el término en inglés para sistema operativo."
+      },
+      {
+        pregunta: "¿Qué significa 'Troubleshooting'?",
+        opciones: [
+          "Diseño gráfico",
+          "Solución de problemas",
+          "Programación web",
+          "Instalación de juegos"
+        ],
+        respuesta: "Solución de problemas",
+        explicacion: "Troubleshooting se refiere al proceso de identificar y solucionar fallas."
+      }
+    ]
+  },
+
+  "documentacion-sistemas": {
+    recursos: [
+      { titulo: "Microsoft Learn - Documentación", url: "https://learn.microsoft.com/es-es/" },
+      { titulo: "Draw.io - Diagramas técnicos", url: "https://www.drawio.com/" },
+      { titulo: "Atlassian - Documentación de proyectos", url: "https://www.atlassian.com/es/software/confluence" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Cuál es el propósito de un manual de usuario?",
+        opciones: [
+          "Enseñar a utilizar un sistema",
+          "Eliminar información",
+          "Modificar el hardware",
+          "Crear una red LAN"
+        ],
+        respuesta: "Enseñar a utilizar un sistema",
+        explicacion: "El manual de usuario explica cómo utilizar las funciones de una aplicación o sistema."
+      },
+      {
+        pregunta: "¿Qué debe contener la documentación técnica?",
+        opciones: [
+          "Únicamente fotografías",
+          "Información sobre la estructura y funcionamiento del sistema",
+          "Solo nombres de usuarios",
+          "Contraseñas personales"
+        ],
+        respuesta: "Información sobre la estructura y funcionamiento del sistema",
+        explicacion: "La documentación técnica describe los componentes, configuraciones y procesos del sistema."
+      }
+    ]
+  },
+
+  "administracion-base-datos": {
+    recursos: [
+      { titulo: "MySQL - Documentación oficial", url: "https://dev.mysql.com/doc/" },
+      { titulo: "SQL Server - Documentación", url: "https://learn.microsoft.com/es-es/sql/sql-server/" },
+      { titulo: "MySQL - Copias de seguridad", url: "https://dev.mysql.com/doc/refman/8.4/en/backup-and-recovery.html" },
+      { titulo: "W3Schools - SQL", url: "https://www.w3schools.com/sql/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es una copia de seguridad de una base de datos?",
+        opciones: [
+          "Una copia de los datos para recuperarlos si ocurre una pérdida",
+          "Una tabla nueva",
+          "Una consulta SQL",
+          "Un usuario administrador"
+        ],
+        respuesta: "Una copia de los datos para recuperarlos si ocurre una pérdida",
+        explicacion: "Los respaldos permiten recuperar información cuando se presentan fallas o pérdidas."
+      },
+      {
+        pregunta: "¿Para qué sirven los permisos de usuario en una base de datos?",
+        opciones: [
+          "Para cambiar el diseño de la computadora",
+          "Para controlar qué acciones puede realizar cada usuario",
+          "Para aumentar la velocidad del teclado",
+          "Para crear imágenes"
+        ],
+        respuesta: "Para controlar qué acciones puede realizar cada usuario",
+        explicacion: "Los permisos permiten proteger la información y controlar el acceso."
+      }
+    ]
+  },
+
+  "proyecto-arduino": {
+    recursos: [
+      { titulo: "Arduino - Documentación oficial", url: "https://docs.arduino.cc/" },
+      { titulo: "Arduino - Proyectos", url: "https://projecthub.arduino.cc/" },
+      { titulo: "Tinkercad - Simulador de circuitos", url: "https://www.tinkercad.com/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es Arduino?",
+        opciones: [
+          "Un procesador de texto",
+          "Una plataforma de hardware y software para proyectos electrónicos",
+          "Una base de datos",
+          "Un sistema operativo"
+        ],
+        respuesta: "Una plataforma de hardware y software para proyectos electrónicos",
+        explicacion: "Arduino permite crear proyectos electrónicos mediante placas programables."
+      },
+      {
+        pregunta: "¿Para qué sirve un sensor en Arduino?",
+        opciones: [
+          "Para detectar cambios en el entorno",
+          "Para almacenar documentos",
+          "Para diseñar páginas web",
+          "Para imprimir archivos"
+        ],
+        respuesta: "Para detectar cambios en el entorno",
+        explicacion: "Los sensores permiten obtener información del entorno, como temperatura, luz o distancia."
+      }
+    ]
+  },
+
+  "desarrollo-aplicaciones-software": {
+    recursos: [
+      { titulo: "Microsoft Learn - .NET", url: "https://learn.microsoft.com/es-es/dotnet/" },
+      { titulo: "Microsoft Learn - C#", url: "https://learn.microsoft.com/es-es/dotnet/csharp/" },
+      { titulo: "MySQL - Documentación", url: "https://dev.mysql.com/doc/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es una aplicación de software?",
+        opciones: [
+          "Un componente físico",
+          "Un programa diseñado para realizar determinadas tareas",
+          "Un cable de red",
+          "Un dispositivo de almacenamiento"
+        ],
+        respuesta: "Un programa diseñado para realizar determinadas tareas",
+        explicacion: "Las aplicaciones permiten realizar actividades y resolver necesidades mediante software."
+      },
+      {
+        pregunta: "¿Qué es la depuración de código?",
+        opciones: [
+          "Eliminar el proyecto",
+          "Cambiar el color de una aplicación",
+          "Identificar y corregir errores en un programa",
+          "Instalar un sistema operativo"
+        ],
+        respuesta: "Identificar y corregir errores en un programa",
+        explicacion: "La depuración permite encontrar errores y corregir el funcionamiento del código."
+      }
+    ]
+  },
+
+  "componentes-dispositivos-moviles": {
+    recursos: [
+      { titulo: "Microsoft Learn - .NET MAUI", url: "https://learn.microsoft.com/es-es/dotnet/maui/" },
+      { titulo: "XAML - Documentación", url: "https://learn.microsoft.com/es-es/dotnet/desktop/wpf/xaml/" },
+      { titulo: "Android Developers", url: "https://developer.android.com/?hl=es-419" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es .NET MAUI?",
+        opciones: [
+          "Un sistema de gestión de bases de datos",
+          "Un framework para desarrollar aplicaciones multiplataforma",
+          "Un editor de imágenes",
+          "Un lenguaje exclusivo de páginas web"
+        ],
+        respuesta: "Un framework para desarrollar aplicaciones multiplataforma",
+        explicacion: ".NET MAUI permite desarrollar aplicaciones para diferentes plataformas utilizando una base de código compartida."
+      },
+      {
+        pregunta: "¿Para qué se utiliza XAML en .NET MAUI?",
+        opciones: [
+          "Para diseñar interfaces de usuario",
+          "Para administrar redes",
+          "Para crear bases de datos",
+          "Para editar videos"
+        ],
+        respuesta: "Para diseñar interfaces de usuario",
+        explicacion: "XAML permite definir visualmente los elementos y la estructura de las interfaces."
+      }
+    ]
+  },
+
+  "mantenimiento-sistema-informatico": {
+    recursos: [
+      { titulo: "Microsoft Learn - Windows", url: "https://learn.microsoft.com/es-es/windows/" },
+      { titulo: "CrystalDiskInfo", url: "https://crystalmark.info/en/software/crystaldiskinfo/" },
+      { titulo: "Microsoft - Seguridad de Windows", url: "https://support.microsoft.com/es-es/windows" },
+      { titulo: "iFixit - Guías de reparación", url: "https://www.ifixit.com/" }
+    ],
+    quiz: [
+      {
+        pregunta: "¿Qué es el mantenimiento preventivo?",
+        opciones: [
+          "Reparar únicamente equipos dañados",
+          "Realizar acciones para evitar futuras fallas",
+          "Eliminar todos los programas",
+          "Cambiar siempre el sistema operativo"
+        ],
+        respuesta: "Realizar acciones para evitar futuras fallas",
+        explicacion: "El mantenimiento preventivo busca reducir problemas antes de que ocurran."
+      },
+      {
+        pregunta: "¿Qué es el mantenimiento correctivo?",
+        opciones: [
+          "Limpiar el equipo diariamente",
+          "Realizar copias de seguridad",
+          "Corregir fallas que ya se han presentado",
+          "Instalar programas nuevos"
+        ],
+        respuesta: "Corregir fallas que ya se han presentado",
+        explicacion: "El mantenimiento correctivo se realiza cuando un equipo o sistema presenta una falla."
+      }
+    ]
+  }
+
+};
+
+
+// ==========================================
+// INCORPORAR RECURSOS Y QUIZ A LOS MÓDULOS
+// ==========================================
+
+modulos.forEach(modulo => {
+  const contenido = contenidoExtra[modulo.id];
+
+  if (contenido) {
+    modulo.recursos = contenido.recursos;
+    modulo.quiz = contenido.quiz;
+  }
+});
+
+console.log("Recursos y cuestionarios agregados correctamente.");
