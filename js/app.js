@@ -373,7 +373,145 @@ function celebrar() {
   confeti();
   setTimeout(() => toast("🎉 100 %: repasaste todos los módulos del año"), 1800);
 }
+/* ---------- QUIZ DINÁMICO POR MÓDULO ---------- */
 
+let quizActual = [];
+
+function mezclarArray(array) {
+  const copia = [...array];
+
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+
+  return copia;
+}
+
+function generarQuiz(modulo) {
+  const aprendizajes = modulo.aprendizajes || [];
+
+  if (aprendizajes.length === 0) {
+    return [];
+  }
+
+  // Crear preguntas a partir de los aprendizajes del módulo
+  let banco = aprendizajes.map((aprendizaje, index) => {
+    const distractores = aprendizajes.filter((a, i) => i !== index);
+
+    const opcionesIncorrectas = mezclarArray([
+      ...distractores,
+      "Una actividad que no corresponde al módulo",
+      "Un tema que no está relacionado con lo aprendido"
+    ]).slice(0, 3);
+
+    const opciones = mezclarArray([
+      aprendizaje,
+      ...opcionesIncorrectas
+    ]);
+
+    return {
+      pregunta: `¿Cuál de estas opciones representa un aprendizaje de ${modulo.nombre}?`,
+      opciones: opciones,
+      respuesta: aprendizaje
+    };
+  });
+
+  // Si hay menos de 3 aprendizajes, repetir preguntas para completar el quiz
+  while (banco.length < 3) {
+    banco = banco.concat(banco);
+  }
+
+  // Seleccionar 3 preguntas aleatorias
+  return mezclarArray(banco).slice(0, 3);
+}
+
+function pintarQuiz() {
+  if (!quizActual.length) {
+    return `
+      <h3>Quiz del módulo</h3>
+      <p class="suave">Todavía no hay preguntas disponibles para este módulo.</p>
+    `;
+  }
+
+  return `
+    <section class="quiz-modulo">
+      <h3>📝 Quiz del módulo</h3>
+      <p class="suave">Responde las 3 preguntas y comprueba tus conocimientos.</p>
+
+      <div class="preguntas-quiz">
+        ${quizActual.map((q, i) => `
+          <fieldset class="pregunta-quiz">
+            <legend>${i + 1}. ${esc(q.pregunta)}</legend>
+
+            ${q.opciones.map((opcion, j) => `
+              <label class="opcion-quiz">
+                <input
+                  type="radio"
+                  name="pregunta-${i}"
+                  value="${j}"
+                >
+                <span>${esc(opcion)}</span>
+              </label>
+            `).join("")}
+
+            <div id="resultado-${i}" class="resultado-quiz"></div>
+          </fieldset>
+        `).join("")}
+      </div>
+
+      <button class="boton" id="calificarQuiz">
+        Comprobar respuestas
+      </button>
+
+      <div id="resultadoFinalQuiz" class="resultado-final-quiz"></div>
+    </section>
+  `;
+}
+
+function calificarQuiz() {
+  let correctas = 0;
+  let respondidas = 0;
+
+  quizActual.forEach((pregunta, i) => {
+    const seleccionada = document.querySelector(
+      `input[name="pregunta-${i}"]:checked`
+    );
+
+    const resultado = $(`resultado-${i}`);
+
+    if (!seleccionada) {
+      resultado.textContent = "⚠️ No respondiste esta pregunta.";
+      resultado.style.color = "#d97706";
+      return;
+    }
+
+    respondidas++;
+
+    const opcionElegida = pregunta.opciones[Number(seleccionada.value)];
+
+    if (opcionElegida === pregunta.respuesta) {
+      correctas++;
+      resultado.textContent = "✅ ¡Correcto!";
+      resultado.style.color = "#16a34a";
+    } else {
+      resultado.textContent = `❌ Incorrecto. Respuesta correcta: ${pregunta.respuesta}`;
+      resultado.style.color = "#dc2626";
+    }
+  });
+
+  const resultadoFinal = $("resultadoFinalQuiz");
+
+  resultadoFinal.innerHTML = `
+    <h3>Resultado del quiz</h3>
+    <p>Respuestas correctas: <strong>${correctas} de 3</strong></p>
+    <p>Preguntas respondidas: ${respondidas} de 3</p>
+    <p>Calificación: <strong>${Math.round((correctas / 3) * 10)}/10</strong></p>
+    <button class="boton sec" id="nuevoQuiz">Intentar otro quiz</button>
+  `;
+
+  $("calificarQuiz").disabled = true;
+}
 /* ---------- Ficha del módulo (con enlace directo y videos) ---------- */
 function videoHTML(v) {
   const m = String(v.url).match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);
@@ -396,45 +534,92 @@ function estadoFichaHTML(m) {
 function abrirFicha(id, sinHash) {
   const m = MODULOS.find(x => x.id === id);
   if (!m) return;
+
   if (!vistos.includes(id)) {
     vistos.push(id);
     guardar(LS.vis, vistos);
     evaluarLogros(true);
   }
+
   const col = colorDe(m);
   const hecho = repasados.includes(id);
+
+  // Generar 3 preguntas nuevas cada vez que se abre el módulo
+  quizActual = generarQuiz(m);
+
   $("ficha").style.setProperty("--mc", col);
   $("ficha").style.setProperty("--mc-tx", textoSobre(col));
+
   $("fichaContenido").innerHTML = `
     <div class="ficha-cab">
-      <h2 id="fichaTitulo"><span aria-hidden="true">${esc(m.icono || "")}</span> ${esc(m.nombre)}</h2>
+      <h2 id="fichaTitulo">
+        <span aria-hidden="true">${esc(m.icono || "")}</span>
+        ${esc(m.nombre)}
+      </h2>
+
       <div class="tags">
         <span>${esc(m.docente)}</span>
         ${m.periodo ? `<span>${esc(m.periodo)}</span>` : ""}
       </div>
     </div>
+
     <div class="ficha-cuerpo">
+
       <p>${esc(m.resumen)}</p>
+
       ${estadoFichaHTML(m)}
-      <h3>Lo que aprendí</h3><ul>${lista(m.aprendizajes)}</ul>
-      <h3>Instrumentos</h3><ul>${lista(m.instrumentos)}</ul>
-      <h3>Programas</h3><ul class="pildoras">${pildoras(m.programas)}</ul>
-      <h3>Herramientas</h3><ul class="pildoras">${pildoras(m.herramientas)}</ul>
-      <h3>Recursos</h3><ul>${enlaces(m.recursos)}</ul>
-      <h3>Evidencias</h3><ul>${enlaces(m.evidencias)}</ul>
+
+      <h3>Lo que aprendí</h3>
+      <ul>${lista(m.aprendizajes)}</ul>
+
+      <h3>Instrumentos</h3>
+      <ul>${lista(m.instrumentos)}</ul>
+
+      <h3>Programas</h3>
+      <ul class="pildoras">${pildoras(m.programas)}</ul>
+
+      <h3>Herramientas</h3>
+      <ul class="pildoras">${pildoras(m.herramientas)}</ul>
+
+      <h3>Recursos</h3>
+      <ul>${enlaces(m.recursos)}</ul>
+
+      <h3>Evidencias</h3>
+      <ul>${enlaces(m.evidencias)}</ul>
+
       <h3>Tutoriales en video</h3>
-      ${(m.videos && m.videos.length) ? m.videos.map(videoHTML).join("") : "<p class='suave'>Pendiente</p>"}
+
+      ${(m.videos && m.videos.length)
+        ? m.videos.map(videoHTML).join("")
+        : "<p class='suave'>Pendiente</p>"
+      }
+
+      ${pintarQuiz()}
+
       <p class="acciones">
-        <button class="boton" id="marcar" data-id="${esc(id)}">${hecho ? "Repasado (clic para desmarcar)" : "Marcar como repasado"}</button>
-        <button class="boton sec" id="copiarEnlace">Copiar enlace</button>
+        <button class="boton" id="marcar" data-id="${esc(id)}">
+          ${hecho ? "Repasado (clic para desmarcar)" : "Marcar como repasado"}
+        </button>
+
+        <button class="boton sec" id="copiarEnlace">
+          Copiar enlace
+        </button>
       </p>
+
     </div>
   `;
+
   if (!sinHash) {
-    try { history.replaceState(null, "", "#modulo=" + id); } catch (e) {}
+    try {
+      history.replaceState(null, "", "#modulo=" + id);
+    } catch (e) {}
   }
-  if (!$("ficha").open) $("ficha").showModal();
-  $("ficha").scrollTop = 0;   // cada ficha abre desde arriba
+
+  if (!$("ficha").open) {
+    $("ficha").showModal();
+  }
+
+  $("ficha").scrollTop = 0;
 }
 
 function alternarRepasado(id) {
@@ -513,9 +698,33 @@ $("nubeTec").addEventListener("click", e => {
   $("modulos").scrollIntoView({ behavior: "smooth" });
 });
 $("fichaContenido").addEventListener("click", e => {
+
   const b = e.target.closest("#marcar");
-  if (b) alternarRepasado(b.dataset.id);
-  if (e.target.closest("#copiarEnlace")) copiarEnlace();
+
+  if (b) {
+    alternarRepasado(b.dataset.id);
+  }
+
+  if (e.target.closest("#copiarEnlace")) {
+    copiarEnlace();
+  }
+
+  // Calificar las respuestas
+  if (e.target.closest("#calificarQuiz")) {
+    calificarQuiz();
+  }
+
+  // Generar otro quiz sin cerrar el módulo
+  if (e.target.closest("#nuevoQuiz")) {
+    const moduloId = MODULOS.find(m =>
+      $("fichaTitulo").textContent.includes(m.nombre)
+    );
+
+    if (moduloId) {
+      abrirFicha(moduloId.id, true);
+    }
+  }
+
 });
 $("cerrar").addEventListener("click", () => $("ficha").close());
 $("ficha").addEventListener("click", e => { if (e.target === $("ficha")) $("ficha").close(); });

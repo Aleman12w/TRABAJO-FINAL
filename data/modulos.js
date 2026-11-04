@@ -1413,3 +1413,4 @@ function obtenerModuloConQuiz(moduloId) {
         quiz: obtenerQuizAleatorio(moduloId, 3)
     };
 }
+

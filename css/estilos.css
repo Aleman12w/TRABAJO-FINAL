@@ -356,3 +356,71 @@ footer { margin-top: 72px; padding: 28px 24px 56px; text-align: center; color: v
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
   .hito { opacity: 1; transform: none; }
 }
+/* ===== QUIZ DINÁMICO ===== */
+
+.quiz-modulo {
+  margin: 30px 0;
+  padding: 22px;
+  background: #f3f6fb;
+  border: 1px solid #dce3f0;
+  border-radius: 16px;
+}
+
+.quiz-modulo h3 {
+  color: #12203f;
+  margin-bottom: 10px;
+}
+
+.pregunta-quiz {
+  border: 1px solid #d5ddeb;
+  border-radius: 12px;
+  padding: 15px;
+  margin: 18px 0;
+  background: white;
+}
+
+.pregunta-quiz legend {
+  font-weight: 700;
+  color: #12203f;
+  padding: 5px;
+}
+
+.opcion-quiz {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px;
+  margin: 7px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #f7f9fc;
+  transition: background 0.2s;
+}
+
+.opcion-quiz:hover {
+  background: #e7edff;
+}
+
+.opcion-quiz input {
+  margin-top: 4px;
+  accent-color: #3b5bff;
+}
+
+.resultado-quiz {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.resultado-final-quiz {
+  margin-top: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  border-left: 5px solid #3b5bff;
+}
+
+#calificarQuiz:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
