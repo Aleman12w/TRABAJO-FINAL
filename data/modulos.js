@@ -1349,3 +1349,13 @@ MODULOS.forEach(modulo => {
 });
 
 console.log("Recursos y cuestionarios agregados correctamente.");
+
+const modulo = MODULOS.find(m => m.id === "componentes-base-datos");
+
+console.log(modulo.recursos);
+console.log(modulo.quiz);
+
+modulo.quiz.forEach((pregunta, index) => {
+  console.log(`${index + 1}. ${pregunta.pregunta}`);
+  console.log(pregunta.opciones);
+});
