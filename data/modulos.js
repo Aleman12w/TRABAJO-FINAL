@@ -1339,7 +1339,7 @@ const contenidoExtra = {
 // INCORPORAR RECURSOS Y QUIZ A LOS MÓDULOS
 // ==========================================
 
-modulos.forEach(modulo => {
+MODULOS.forEach(modulo => {
   const contenido = contenidoExtra[modulo.id];
 
   if (contenido) {
